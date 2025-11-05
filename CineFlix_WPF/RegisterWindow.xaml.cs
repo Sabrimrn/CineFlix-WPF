@@ -7,9 +7,6 @@ using System.Windows.Controls;
 
 namespace CineFlix_WPF
 {
-    /// <summary>
-    /// Interaction logic for RegisterWindow.xaml
-    /// </summary>
     public partial class RegisterWindow : Window
     {
         private readonly UserManager<CineFlixUser> _userManager;

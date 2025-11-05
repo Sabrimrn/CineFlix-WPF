@@ -5,20 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace CineFlix_WPF
@@ -271,8 +263,8 @@ namespace CineFlix_WPF
         // Regisseur Methods
         private void AddRegisseurButton_Click(object sender, RoutedEventArgs e)
         {
-            var regisseurWindow = new RegisseurWindow(null);
-            if (regisseurWindow.ShowDialog() == true)
+            var regisseurWindow = new RegisseurWindow();
+                 if (regisseurWindow.ShowDialog() == true)
             {
                 LoadData();
             }
@@ -284,7 +276,8 @@ namespace CineFlix_WPF
             var regisseur = button?.Tag as Regisseur;
             if (regisseur != null)
             {
-                var regisseurWindow = new RegisseurWindow(regisseur);
+                var regisseurWindow = new RegisseurWindow();
+                regisseurWindow.SetRegisseur(regisseur);
                 if (regisseurWindow.ShowDialog() == true)
                 {
                     LoadData();
@@ -321,7 +314,7 @@ namespace CineFlix_WPF
         // Genre Methods
         private void AddGenreButton_Click(object sender, RoutedEventArgs e)
         {
-            var genreWindow = new GenreWindow(null);
+            var genreWindow = new GenreWindow();
             if (genreWindow.ShowDialog() == true)
             {
                 LoadData();
@@ -334,7 +327,8 @@ namespace CineFlix_WPF
             var genre = button?.Tag as Genre;
             if (genre != null)
             {
-                var genreWindow = new GenreWindow(genre);
+                var genreWindow = new GenreWindow();
+                genreWindow.SetGenre(genre);
                 if (genreWindow.ShowDialog() == true)
                 {
                     LoadData();
@@ -437,13 +431,14 @@ namespace CineFlix_WPF
         }
 
         // User Management Methods
-        private void ManageRolesButton_Click(object sender, RoutedEventArgs e)
+        private async void ManageRolesButton_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             var user = button?.Tag as CineFlixUser;
             if (user != null)
             {
-                var rolesWindow = new RolesWindow(user);
+                var rolesWindow = new RolesWindow();
+                await rolesWindow.SetUserAsync(user);
                 if (rolesWindow.ShowDialog() == true)
                 {
                     LoadUsers();
