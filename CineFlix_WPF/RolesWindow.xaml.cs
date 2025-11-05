@@ -85,5 +85,10 @@ namespace CineFlix_WPF
             this.DialogResult = false;
             this.Close();
         }
+
+        private void RolesListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

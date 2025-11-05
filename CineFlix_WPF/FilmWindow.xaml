@@ -5,8 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CineFlix_WPF"
         mc:Ignorable="d"
-        Title="FilmWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="Film" Height="500" Width="600">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Titel:" VerticalAlignment="Center" Margin="0,4" />
+        <TextBox Grid.Row="0" Grid.Column="1" x:Name="TitelTextBox" Margin="4" />
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Releasejaar:" VerticalAlignment="Center" Margin="0,4" />
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="ReleasejaarTextBox" Margin="4" />
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Duur (min):" VerticalAlignment="Center" Margin="0,4" />
+        <TextBox Grid.Row="2" Grid.Column="1" x:Name="DuurTextBox" Margin="4" />
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Regisseur:" VerticalAlignment="Center" Margin="0,4" />
+        <ComboBox Grid.Row="3" Grid.Column="1" x:Name="RegisseurComboBox" Margin="4" DisplayMemberPath="Naam" />
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Genres:" VerticalAlignment="Top" Margin="0,4" />
+        <ListBox Grid.Row="4" Grid.Column="1" x:Name="GenresListBox" Margin="4" SelectionMode="Extended" DisplayMemberPath="GenreNaam" Height="120" />
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Beschrijving:" VerticalAlignment="Top" Margin="0,4" />
+        <TextBox Grid.Row="5" Grid.Column="1" x:Name="BeschrijvingTextBox" Margin="4" AcceptsReturn="True" Height="100"/>
+
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Rating:" VerticalAlignment="Center" Margin="0,4" />
+        <local:RatingControl Grid.Row="6" Grid.Column="1" x:Name="RatingControl" Margin="4" />
+
+        <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button x:Name="SaveButton" Width="80" Margin="4" Click="SaveButton_Click">Opslaan</Button>
+            <Button x:Name="CancelButton" Width="80" Margin="4" Click="CancelButton_Click">Annuleren</Button>
+        </StackPanel>
     </Grid>
 </Window>
