@@ -40,6 +40,7 @@ namespace CineFlix_WPF
             _context = App.ServiceProvider.GetRequiredService<CineFlixDbContext>();
             _userManager = App.ServiceProvider.GetRequiredService<UserManager<CineFlixUser>>();
 
+
             _films = new ObservableCollection<Film>();
             _regisseurs = new ObservableCollection<Regisseur>();
             _genres = new ObservableCollection<Genre>();
@@ -67,7 +68,7 @@ namespace CineFlix_WPF
             }
 
             // Add converter to resources
-            this.Resources.Add("GenresConverter", new GenresConverter());
+            // this.Resources.Add("GenresConverter", new GenresConverter());
         }
 
         private void SetupTimer()
@@ -525,24 +526,6 @@ namespace CineFlix_WPF
             _timer?.Stop();
             _context?.Dispose();
             base.OnClosed(e);
-        }
-    }
-
-    // Converter voor genres weergave
-    public class GenresConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var filmGenres = value as ICollection<FilmGenre>;
-            if (filmGenres == null || !filmGenres.Any())
-                return "Geen genres";
-
-            return string.Join(", ", filmGenres.Select(fg => fg.Genre?.GenreNaam ?? ""));
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }

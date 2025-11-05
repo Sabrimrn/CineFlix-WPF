@@ -21,4 +21,8 @@
     <ProjectReference Include="..\CineFlix_Models\CineFlix_Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controls\" />
+  </ItemGroup>
+
 </Project>
