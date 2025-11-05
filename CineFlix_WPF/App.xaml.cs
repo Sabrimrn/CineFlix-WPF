@@ -4,16 +4,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Configuration;
-using System.Data;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace CineFlix_WPF
 {
     public partial class App : Application
     {
-        private IHost _host;
+        private IHost? _host;
         public static IServiceProvider ServiceProvider { get; private set; } = null!;
         public static CineFlixUser? CurrentUser { get; set; }
         public static List<string>? CurrentUserRoles { get; set; }
@@ -59,14 +60,16 @@ namespace CineFlix_WPF
                     .AddEntityFrameworkStores<CineFlixDbContext>()
                     .AddDefaultTokenProviders();
 
-                    // Registreer Windows
+                    // Registreer MainWindow expliciet
                     services.AddSingleton<MainWindow>();
-                    services.AddTransient<LoginWindow>();
-                    services.AddTransient<RegisterWindow>();
-                    services.AddTransient<FilmWindow>();
-                    services.AddTransient<RegisseurWindow>();
-                    services.AddTransient<GenreWindow>();
-                    services.AddTransient<RolesWindow>();
+
+                    // Registreer overige Windows automatisch
+                    var windowTypes = typeof(App).Assembly.GetTypes()
+                        .Where(t => typeof(Window).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract && t != typeof(MainWindow));
+                    foreach (var wt in windowTypes)
+                    {
+                        services.AddTransient(wt);
+                    }
                 })
                 .Build();
 
@@ -96,15 +99,30 @@ namespace CineFlix_WPF
                 }
             }
 
+            // Show login window as startup window (minimal required flow)
+            try
+            {
+                var loginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
+                loginWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Kan het login venster niet openen: {ex.Message}", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                Shutdown();
+                return;
+            }
+
             base.OnStartup(e);
         }
 
         protected override async void OnExit(ExitEventArgs e)
         {
-            using (_host)
+            if (_host != null)
             {
                 await _host.StopAsync();
+                _host.Dispose();
             }
+
             base.OnExit(e);
         }
 
