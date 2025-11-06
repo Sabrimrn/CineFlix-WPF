@@ -11,13 +11,11 @@ namespace CineFlix_WPF
     public partial class LoginWindow : Window
     {
         private readonly UserManager<CineFlixUser> _userManager;
-        private readonly SignInManager<CineFlixUser> _signInManager;
 
         public LoginWindow()
         {
             InitializeComponent();
             _userManager = App.ServiceProvider.GetRequiredService<UserManager<CineFlixUser>>();
-            _signInManager = App.ServiceProvider.GetRequiredService<SignInManager<CineFlixUser>>();
         }
 
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
