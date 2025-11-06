@@ -13,65 +13,71 @@
 
     <Grid>
         <Border Style="{StaticResource CardStyle}" Margin="30">
-            <StackPanel>
-                <!-- Logo/Titel -->
-                <TextBlock Text="🎬 CineFlix" 
-                          Style="{StaticResource TitleStyle}"
-                          FontSize="32"/>
+            <!-- Added ScrollViewer to prevent content from being cut off on small/heavy-scaling displays -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" CanContentScroll="True">
+                <StackPanel>
+                    <!-- Logo/Titel -->
+                    <TextBlock Text="🎬 CineFlix" 
+                              Style="{StaticResource TitleStyle}"
+                              FontSize="32"/>
 
-                <TextBlock Text="Film Bibliotheek Beheer" 
-                          HorizontalAlignment="Center"
-                          Foreground="{StaticResource LightTextColor}"
-                          FontStyle="Italic"
-                          Margin="0,0,0,30"/>
+                    <TextBlock Text="Film Bibliotheek Beheer" 
+                              HorizontalAlignment="Center"
+                              Foreground="{StaticResource LightTextColor}"
+                              FontStyle="Italic"
+                              Margin="0,0,0,30"/>
 
-                <!-- Login Form -->
-                <Label Content="E-mail:" Style="{StaticResource LabelStyle}"/>
-                <TextBox x:Name="EmailTextBox" 
-                        Style="{StaticResource InputTextBoxStyle}"
-                        Text="admin@cineflix.com"/>
+                    <!-- Login Form -->
+                    <Label Content="E-mail:" Style="{StaticResource LabelStyle}"/>
+                    <TextBox x:Name="EmailTextBox" 
+                            Style="{StaticResource InputTextBoxStyle}"
+                            Text="admin@cineflix.com"/>
 
-                <Label Content="Wachtwoord:" Style="{StaticResource LabelStyle}"/>
-                <PasswordBox x:Name="PasswordBox" 
-                            Style="{StaticResource InputPasswordBoxStyle}"
-                            Password="Admin123!"/>
+                    <Label Content="Wachtwoord:" Style="{StaticResource LabelStyle}"/>
+                    <PasswordBox x:Name="PasswordBox" 
+                                Style="{StaticResource InputPasswordBoxStyle}"
+                                Password="Admin123!"/>
 
-                <!-- Error Message -->
-                <TextBlock x:Name="ErrorMessage" 
-                          Style="{StaticResource ErrorMessageStyle}"
-                          Visibility="Collapsed"/>
+                    <!-- Error Message -->
+                    <TextBlock x:Name="ErrorMessage" 
+                              Style="{StaticResource ErrorMessageStyle}"
+                              Visibility="Collapsed"/>
 
-                <!-- Buttons -->
-                <Button Content="Inloggen" 
-                       Style="{StaticResource PrimaryButtonStyle}"
-                       Margin="0,20,0,10"
-                       Click="LoginButton_Click"/>
+                    <!-- Buttons -->
+                    <Button Content="Inloggen" 
+                           Style="{StaticResource PrimaryButtonStyle}"
+                           Margin="0,20,0,10"
+                           Click="LoginButton_Click"/>
 
-                <Separator Margin="0,10"/>
+                    <Separator Margin="0,10"/>
 
-                <!-- Register Link -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-                    <TextBlock Text="Nog geen account? " 
-                              Foreground="{StaticResource LightTextColor}"/>
-                    <Button Content="Registreer hier" 
-                           Style="{StaticResource LinkButtonStyle}"
-                           Click="RegisterButton_Click"/>
+                    <!-- Register Link -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                        <TextBlock Text="Nog geen account? " 
+                                  Foreground="{StaticResource LightTextColor}"/>
+                        <Button Content="Registreer hier" 
+                               Style="{StaticResource LinkButtonStyle}"
+                               Click="RegisterButton_Click"/>
+                    </StackPanel>
+
+                    <!-- Info -->
+                    <TextBlock Style="{StaticResource InfoMessageStyle}"
+                              TextAlignment="Center"
+                              Margin="0,20,0,0">
+                        <Run Text="Test accounts:"/>
+                        <LineBreak/>
+                        <Run Text="Admin: admin@cineflix.com / Admin123!"/>
+                        <LineBreak/>
+                        <Run Text="User: user@cineflix.com / User123!"/>
+                    </TextBlock>
                 </StackPanel>
-
-                <!-- Info -->
-                <TextBlock Style="{StaticResource InfoMessageStyle}"
-                          TextAlignment="Center"
-                          Margin="0,20,0,0">
-                    <Run Text="Test accounts:"/>
-                    <LineBreak/>
-                    <Run Text="Admin: admin@cineflix.com / Admin123!"/>
-                    <LineBreak/>
-                    <Run Text="User: user@cineflix.com / User123!"/>
-                </TextBlock>
-            </StackPanel>
+            </ScrollViewer>
         </Border>
     </Grid>
 </Window>
+
+
+
 
 
 

@@ -48,39 +48,51 @@ namespace CineFlix_WPF
                     return;
                 }
 
-                // Probeer in te loggen
-                var result = await _signInManager.PasswordSignInAsync(user.UserName, PasswordBox.Password, false, lockoutOnFailure: true);
-
-                if (result.Succeeded)
-                {
-                    // Update laatste login datum
-                    user.LastLoginDate = DateTime.Now;
-                    await _userManager.UpdateAsync(user);
-
-                    // Haal rollen op
-                    var roles = await _userManager.GetRolesAsync(user);
-
-                    // Sla gebruiker en rollen op in App
-                    App.CurrentUser = user;
-                    App.CurrentUserRoles = roles.ToList();
-
-                    // Open hoofdvenster
-                    var mainWindow = App.ServiceProvider.GetRequiredService<MainWindow>();
-                    mainWindow.Show();
-                    this.Close();
-                }
-                else if (result.IsLockedOut)
+                // Use UserManager to validate password and handle lockout without HttpContext
+                // Controleer of gebruiker al gelocked is
+                if (await _userManager.IsLockedOutAsync(user))
                 {
                     ShowError("Account is tijdelijk geblokkeerd wegens te veel mislukte pogingen.");
+                    return;
                 }
-                else if (result.IsNotAllowed)
+
+                // Controleer wachtwoord
+                bool passwordValid = await _userManager.CheckPasswordAsync(user, PasswordBox.Password);
+
+                if (!passwordValid)
                 {
-                    ShowError("Account is niet geactiveerd.");
+                    // Verhoog failed count en controleer lockout
+                    await _userManager.AccessFailedAsync(user);
+                    if (await _userManager.IsLockedOutAsync(user))
+                    {
+                        ShowError("Account is tijdelijk geblokkeerd wegens te veel mislukte pogingen.");
+                    }
+                    else
+                    {
+                        ShowError("Ongeldige inloggegevens.");
+                    }
+
+                    return;
                 }
-                else
-                {
-                    ShowError("Ongeldige inloggegevens.");
-                }
+
+                // Succesvolle login: reset failed count
+                await _userManager.ResetAccessFailedCountAsync(user);
+
+                // Update laatste login datum
+                user.LastLoginDate = DateTime.Now;
+                await _userManager.UpdateAsync(user);
+
+                // Haal rollen op
+                var roles = await _userManager.GetRolesAsync(user);
+
+                // Sla gebruiker en rollen op in App
+                App.CurrentUser = user;
+                App.CurrentUserRoles = roles.ToList();
+
+                // Open hoofdvenster
+                var mainWindow = App.ServiceProvider.GetRequiredService<MainWindow>();
+                mainWindow.Show();
+                this.Close();
             }
             catch (Exception ex)
             {

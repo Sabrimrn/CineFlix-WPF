@@ -12,6 +12,12 @@ namespace CineFlix_Models
 {
     public class CineFlixDbContext : IdentityDbContext<CineFlixUser>
     {
+        // Add constructor that accepts options so AddDbContext can inject configured options
+        public CineFlixDbContext(DbContextOptions<CineFlixDbContext> options)
+            : base(options)
+        {
+        }
+
         // DbSets voor onze entiteiten
         public DbSet<Film> Films { get; set; }
         public DbSet<Regisseur> Regisseurs { get; set; }

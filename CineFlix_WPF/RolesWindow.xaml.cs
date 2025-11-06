@@ -1,12 +1,48 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace CineFlix_WPF
 {
+    public class RoleItem : INotifyPropertyChanged
+    {
+        private string _name;
+        private bool _isChecked;
+        private bool _isEnabled = true;
+
+        public string Name {
+            get => _name;
+            set {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+
+        public bool IsChecked {
+            get => _isChecked;
+            set {
+                _isChecked = value;
+                OnPropertyChanged(nameof(IsChecked));
+            }
+        }
+
+        public bool IsEnabled {
+            get => _isEnabled;
+            set {
+                _isEnabled = value;
+                OnPropertyChanged(nameof(IsEnabled));
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string propName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+    }
+
     /// <summary>
     /// Interaction logic for RolesWindow.xaml
     /// </summary>
@@ -35,23 +71,21 @@ namespace CineFlix_WPF
             var roles = _roleManager.Roles.ToList();
             var userRoles = await _userManager.GetRolesAsync(_user);
 
+            var list = new List<RoleItem>();
             foreach (var role in roles)
             {
-                var item = new System.Windows.Controls.CheckBox
-                {
-                    Content = role.Name,
-                    IsChecked = userRoles.Contains(role.Name)
-                };
-                RolesListBox.Items.Add(item);
+                list.Add(new RoleItem { Name = role.Name ?? string.Empty, IsChecked = userRoles.Contains(role.Name) });
             }
+
+            RolesListBox.ItemsSource = list;
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var selected = RolesListBox.Items.OfType<System.Windows.Controls.CheckBox>()
-                    .Where(cb => cb.IsChecked == true).Select(cb => cb.Content.ToString()).ToList();
+                var items = RolesListBox.ItemsSource as IEnumerable<RoleItem>;
+                var selected = items.Where(i => i.IsChecked).Select(i => i.Name).ToList();
 
                 var current = await _userManager.GetRolesAsync(_user);
 
