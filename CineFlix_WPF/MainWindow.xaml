@@ -14,23 +14,25 @@
                 <MenuItem Header="_Afsluiten" Click="ExitMenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="_Navigatie">
-                <MenuItem Header="📽️ Films" Click="FilmsMenuItem_Click"/>
-                <MenuItem Header="🎬 Regisseurs" Click="RegisseursMenuItem_Click"/>
+                <MenuItem Header="Films" Click="FilmsMenuItem_Click"/>
+                <MenuItem Header="Regisseurs" Click="RegisseursMenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="_Beheer" x:Name="AdminMenu" Visibility="Collapsed">
-                <MenuItem Header="👥 Gebruikers & Rollen" Click="UsersMenuItem_Click"/>
+                <MenuItem Header="Gebruikers en Rollen" Click="UsersMenuItem_Click"/>
             </MenuItem>
         </Menu>
 
         <!-- Statusbalk -->
         <StatusBar DockPanel.Dock="Bottom">
-            <TextBlock x:Name="StatusTextBlock" Margin="5,0"/>
+            <StatusBarItem>
+                <TextBlock x:Name="StatusTextBlock" Margin="5,0"/>
+            </StatusBarItem>
         </StatusBar>
 
         <!-- Hoofdinhoud met Tabs -->
         <TabControl x:Name="MainTabControl">
             <!-- Films Tab -->
-            <TabItem Header="📽️ Films">
+            <TabItem Header="Films">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -38,7 +40,7 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-                        <Button Content="➕ Nieuwe Film" Click="AddFilmButton_Click" Margin="0,0,10,0"/>
+                        <Button Content="Nieuwe Film" Click="AddFilmButton_Click" Margin="0,0,10,0"/>
                         <Label Content="Zoek op titel:" VerticalAlignment="Center"/>
                         <TextBox x:Name="FilmSearchBox" Width="250" TextChanged="FilmSearchBox_TextChanged"/>
                     </StackPanel>
@@ -53,8 +55,8 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <Button Content="✏️" ToolTip="Bewerken" Margin="2" Click="EditFilmButton_Click" Tag="{Binding}"/>
-                                            <Button Content="🗑️" ToolTip="Verwijderen" Margin="2" Click="DeleteFilmButton_Click" Tag="{Binding}"/>
+                                            <Button Content="Bewerken" Margin="2" Click="EditFilmButton_Click" Tag="{Binding}"/>
+                                            <Button Content="Verwijderen" Margin="2" Click="DeleteFilmButton_Click" Tag="{Binding}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -65,7 +67,7 @@
             </TabItem>
 
             <!-- Regisseurs Tab -->
-            <TabItem Header="🎬 Regisseurs">
+            <TabItem Header="Regisseurs">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -73,8 +75,7 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-                        <Button Content="➕ Nieuwe Regisseur" Click="AddRegisseurButton_Click" Margin="0,0,10,0"/>
-                        <!-- Zoekbalk voor regisseurs kan hier later worden toegevoegd -->
+                        <Button Content="Nieuwe Regisseur" Click="AddRegisseurButton_Click" Margin="0,0,10,0"/>
                     </StackPanel>
 
                     <DataGrid Grid.Row="1" x:Name="RegisseursDataGrid" AutoGenerateColumns="False" IsReadOnly="True">
@@ -87,8 +88,8 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <Button Content="✏️" ToolTip="Bewerken" Margin="2" Click="EditRegisseurButton_Click" Tag="{Binding}"/>
-                                            <Button Content="🗑️" ToolTip="Verwijderen" Margin="2" Click="DeleteRegisseurButton_Click" Tag="{Binding}"/>
+                                            <Button Content="Bewerken" Margin="2" Click="EditRegisseurButton_Click" Tag="{Binding}"/>
+                                            <Button Content="Verwijderen" Margin="2" Click="DeleteRegisseurButton_Click" Tag="{Binding}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>

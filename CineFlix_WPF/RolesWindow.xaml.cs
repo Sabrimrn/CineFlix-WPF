@@ -11,29 +11,36 @@ namespace CineFlix_WPF
 {
     public class RoleItem : INotifyPropertyChanged
     {
-        private string _name;
+        // Initialiseer _name om waarschuwing CS8618 te voorkomen.
+        private string _name = string.Empty;
         private bool _isChecked;
         private bool _isEnabled = true;
 
-        public string Name {
+        public string Name
+        {
             get => _name;
-            set {
+            set
+            {
                 _name = value;
                 OnPropertyChanged(nameof(Name));
             }
         }
 
-        public bool IsChecked {
+        public bool IsChecked
+        {
             get => _isChecked;
-            set {
+            set
+            {
                 _isChecked = value;
                 OnPropertyChanged(nameof(IsChecked));
             }
         }
 
-        public bool IsEnabled {
+        public bool IsEnabled
+        {
             get => _isEnabled;
-            set {
+            set
+            {
                 _isEnabled = value;
                 OnPropertyChanged(nameof(IsEnabled));
             }
@@ -43,22 +50,24 @@ namespace CineFlix_WPF
         protected void OnPropertyChanged(string propName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
     }
 
-    /// <summary>
-    /// Interaction logic for RolesWindow.xaml
-    /// </summary>
     public partial class RolesWindow : Window
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<CineFlix_Models.CineFlixUser> _userManager;
-        private CineFlix_Models.CineFlixUser _user;
+
+        // HIER IS DE VERANDERING:
+        // We voegen een vraagteken (?) toe om aan te geven dat _user null mag zijn.
+        private CineFlix_Models.CineFlixUser? _user;
 
         public RolesWindow()
         {
             InitializeComponent();
+            // We halen de services op via de App ServiceProvider
             _roleManager = App.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             _userManager = App.ServiceProvider.GetRequiredService<UserManager<CineFlix_Models.CineFlixUser>>();
         }
 
+        // Deze methode wordt aangeroepen vanuit het hoofdvenster om de gebruiker in te stellen.
         public async Task SetUserAsync(CineFlix_Models.CineFlixUser user)
         {
             _user = user;
@@ -67,6 +76,8 @@ namespace CineFlix_WPF
 
         private async Task LoadRolesAsync()
         {
+            if (_user == null) return;
+
             RolesListBox.Items.Clear();
             var roles = _roleManager.Roles.ToList();
             var userRoles = await _userManager.GetRolesAsync(_user);
@@ -74,7 +85,12 @@ namespace CineFlix_WPF
             var list = new List<RoleItem>();
             foreach (var role in roles)
             {
-                list.Add(new RoleItem { Name = role.Name ?? string.Empty, IsChecked = userRoles.Contains(role.Name) });
+                // Controleer of de rolnaam niet null is
+                if (role.Name != null)
+                {
+                    // Omdat we nu in de if-statement zitten, weet de compiler dat role.Name niet null is.
+                    list.Add(new RoleItem { Name = role.Name, IsChecked = userRoles.Contains(role.Name) });
+                }
             }
 
             RolesListBox.ItemsSource = list;
@@ -82,11 +98,16 @@ namespace CineFlix_WPF
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            // Voeg een controle toe om een fout te voorkomen.
+            if (_user == null || RolesListBox.ItemsSource == null) return;
+
             try
             {
                 var items = RolesListBox.ItemsSource as IEnumerable<RoleItem>;
-                var selected = items.Where(i => i.IsChecked).Select(i => i.Name).ToList();
+                // Controleer of 'items' niet null is
+                if (items == null) return;
 
+                var selected = items.Where(i => i.IsChecked).Select(i => i.Name).ToList();
                 var current = await _userManager.GetRolesAsync(_user);
 
                 var toAdd = selected.Except(current).ToList();
@@ -122,7 +143,7 @@ namespace CineFlix_WPF
 
         private void RolesListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-
+            // Deze methode is niet nodig, je kunt hem leeg laten.
         }
     }
 }

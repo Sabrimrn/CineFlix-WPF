@@ -9,62 +9,41 @@ namespace CineFlix_WPF
     public partial class GenreWindow : Window
     {
         private readonly CineFlixDbContext _context;
-        private Genre _genre;
+        private readonly Genre _genre; // Wordt nu in constructor gevuld
+        private readonly bool _isNew;
 
-        public GenreWindow()
+        // Constructor voor DI
+        public GenreWindow(CineFlixDbContext context, Genre? genre)
         {
             InitializeComponent();
-            _context = App.ServiceProvider.GetRequiredService<CineFlixDbContext>();
-        }
+            _context = context;
 
-        public void SetGenre(Genre genre)
-        {
-            _genre = genre;
-            if (_genre != null)
+            if (genre == null)
             {
-                var tb = this.FindName("GenreNaamTextBox") as TextBox;
-                if (tb != null)
-                {
-                    tb.Text = _genre.GenreNaam;
-                }
+                _genre = new Genre();
+                _isNew = true;
+                Title = "Nieuw Genre";
             }
+            else
+            {
+                _genre = _context.Genres.Single(g => g.GenreId == genre.GenreId);
+                _isNew = false;
+                Title = "Genre Bewerken";
+            }
+
+            // Vul UI
+            GenreNaamTextBox.Text = _genre.GenreNaam;
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                var tb = this.FindName("GenreNaamTextBox") as TextBox;
-                var text = tb?.Text ?? string.Empty;
+            _genre.GenreNaam = GenreNaamTextBox.Text;
 
-                if (string.IsNullOrWhiteSpace(text))
-                {
-                    MessageBox.Show("Genre naam is verplicht.", "Validatie", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
-                }
+            if (_isNew) _context.Genres.Add(_genre);
+            else _context.Genres.Update(_genre);
 
-                if (_genre == null)
-                {
-                    _genre = new Genre();
-                    _context.Genres.Add(_genre);
-                }
-
-                _genre.GenreNaam = text.Trim();
-
-                await _context.SaveChangesAsync();
-                this.DialogResult = true;
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Fout bij opslaan: {ex.Message}", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = false;
-            this.Close();
+            await _context.SaveChangesAsync();
+            DialogResult = true;
         }
     }
 }
