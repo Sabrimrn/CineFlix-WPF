@@ -131,6 +131,30 @@
                     </DataGrid>
                 </Grid>
             </TabItem>
+
+            <!-- Gebruikers Tab -->
+            <TabItem x:Name="UsersTab" Header="Gebruikers" Visibility="Collapsed">
+                <Grid Margin="10">
+                    <DataGrid x:Name="UsersDataGrid" AutoGenerateColumns="False" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Naam" Binding="{Binding FullName}" Width="*"/>
+                            <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
+                            <DataGridTextColumn Header="Registratiedatum" Binding="{Binding RegistrationDate, StringFormat='dd-MM-yyyy'}" Width="*"/>
+                            <DataGridCheckBoxColumn Header="Geblokkeerd" Binding="{Binding IsDeleted}" Width="Auto"/>
+                            <DataGridTemplateColumn Header="Acties" Width="150">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Content="Blokkeren/Deblokkeren" Margin="2" Click="ToggleBlockUserButton_Click" Tag="{Binding}"/>
+                                            <Button Content="Rollen Beheren" Margin="2" Click="ManageRolesButton_Click" Tag="{Binding}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

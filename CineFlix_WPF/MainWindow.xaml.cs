@@ -20,7 +20,8 @@ namespace CineFlix_WPF
 
         private readonly ObservableCollection<Film> _films = new();
         private readonly ObservableCollection<Regisseur> _regisseurs = new();
-        private readonly ObservableCollection<Genre> _genres = new(); // Nieuwe collectie voor genres
+        private readonly ObservableCollection<Genre> _genres = new();
+        private readonly ObservableCollection<CineFlixUser> _users = new();
         private readonly ICollectionView _filmsView;
 
         public MainWindow(CineFlixDbContext context, UserManager<CineFlixUser> userManager)
@@ -32,7 +33,8 @@ namespace CineFlix_WPF
             // Koppel de collecties aan de DataGrids
             FilmsDataGrid.ItemsSource = _films;
             RegisseursDataGrid.ItemsSource = _regisseurs;
-            GenresDataGrid.ItemsSource = _genres; // Nieuwe koppeling
+            GenresDataGrid.ItemsSource = _genres;
+            UsersDataGrid.ItemsSource = _users;
 
             _filmsView = CollectionViewSource.GetDefaultView(_films);
 
@@ -41,15 +43,19 @@ namespace CineFlix_WPF
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            UpdateUIForUser();
             await LoadAllDataAsync();
+            UpdateUIForUser();
         }
 
         private async Task LoadAllDataAsync()
         {
             await LoadFilmsAsync();
             await LoadRegisseursAsync();
-            await LoadGenresAsync(); // Nieuwe methode aanroepen
+            await LoadGenresAsync();
+            if (App.IsAdmin())
+            {
+                await LoadUsersAsync();
+            }
         }
 
         private void UpdateUIForUser()
@@ -59,11 +65,14 @@ namespace CineFlix_WPF
                 StatusTextBlock.Text = $"Ingelogd als: {App.CurrentUser.FullName} ({string.Join(", ", App.CurrentUserRoles ?? new System.Collections.Generic.List<string>())})";
                 if (App.IsAdmin())
                 {
+                    // Maak de admin-specifieke UI elementen zichtbaar
+                    UsersTab.Visibility = Visibility.Visible;
                     AdminMenu.Visibility = Visibility.Visible;
                 }
             }
         }
 
+        // --- Data Laad Methoden ---
         private async Task LoadFilmsAsync()
         {
             var filmsFromDb = await _context.Films.Include(f => f.Regisseur).OrderBy(f => f.Titel).ToListAsync();
@@ -85,10 +94,20 @@ namespace CineFlix_WPF
             foreach (var genre in genresFromDb) _genres.Add(genre);
         }
 
-        // --- Film Acties (blijft ongewijzigd) ---
+        private async Task LoadUsersAsync()
+        {
+            var usersFromDb = await _userManager.Users.OrderBy(u => u.Email).ToListAsync();
+            _users.Clear();
+            foreach (var user in usersFromDb)
+            {
+                _users.Add(user);
+            }
+        }
+
+        // --- Film Acties ---
         private async void AddFilmButton_Click(object sender, RoutedEventArgs e)
         {
-            var filmWindow = new FilmWindow(null);
+            var filmWindow = new FilmWindow(_context, null);
             if (filmWindow.ShowDialog() == true) await LoadFilmsAsync();
         }
 
@@ -96,7 +115,7 @@ namespace CineFlix_WPF
         {
             if ((sender as FrameworkElement)?.Tag is Film filmToEdit)
             {
-                var filmWindow = new FilmWindow(filmToEdit);
+                var filmWindow = new FilmWindow(_context, filmToEdit);
                 if (filmWindow.ShowDialog() == true) await LoadFilmsAsync();
             }
         }
@@ -114,7 +133,7 @@ namespace CineFlix_WPF
             }
         }
 
-        // --- Regisseur Acties (blijft ongewijzigd) ---
+        // --- Regisseur Acties ---
         private async void AddRegisseurButton_Click(object sender, RoutedEventArgs e)
         {
             var regisseurWindow = new RegisseurWindow(_context, null);
@@ -149,7 +168,7 @@ namespace CineFlix_WPF
             }
         }
 
-        // --- Genre Acties (Nieuw) ---
+        // --- Genre Acties ---
         private async void AddGenreButton_Click(object sender, RoutedEventArgs e)
         {
             var genreWindow = new GenreWindow(_context, null);
@@ -184,12 +203,47 @@ namespace CineFlix_WPF
             }
         }
 
+        // --- Gebruiker Acties ---
+        private async void ToggleBlockUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as FrameworkElement)?.Tag is CineFlixUser userToToggle)
+            {
+                if (userToToggle.Id == App.CurrentUser?.Id)
+                {
+                    MessageBox.Show("Je kunt je eigen account niet blokkeren.", "Fout", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                userToToggle.IsDeleted = !userToToggle.IsDeleted;
+                userToToggle.DeletedOn = userToToggle.IsDeleted ? DateTime.Now : null;
+
+                var result = await _userManager.UpdateAsync(userToToggle);
+                if (result.Succeeded)
+                {
+                    ICollectionView view = CollectionViewSource.GetDefaultView(UsersDataGrid.ItemsSource);
+                    view.Refresh();
+                    MessageBox.Show($"Gebruiker '{userToToggle.Email}' is {(userToToggle.IsDeleted ? "geblokkeerd" : "gedeblokkeerd")}.", "Succes", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+        }
+
+        private async void ManageRolesButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ((sender as FrameworkElement)?.Tag is CineFlixUser userToManage)
+            {
+                var rolesWindow = new RolesWindow();
+                await rolesWindow.SetUserAsync(userToManage);
+
+                rolesWindow.ShowDialog();
+            }
+        }
+
+        // --- Filter & Navigatie Acties ---
         private void FilmSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             _filmsView.Filter = item => (item as Film)?.Titel.ToLower().Contains(FilmSearchBox.Text.ToLower()) ?? false;
         }
 
-        // --- Menu & Navigatie Acties ---
         private void LogoutMenuItem_Click(object sender, RoutedEventArgs e)
         {
             App.Logout();
@@ -200,7 +254,7 @@ namespace CineFlix_WPF
         private void ExitMenuItem_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
         private void FilmsMenuItem_Click(object sender, RoutedEventArgs e) => MainTabControl.SelectedIndex = 0;
         private void RegisseursMenuItem_Click(object sender, RoutedEventArgs e) => MainTabControl.SelectedIndex = 1;
-        private void GenresMenuItem_Click(object sender, RoutedEventArgs e) => MainTabControl.SelectedIndex = 2; // Nieuw
-        private void UsersMenuItem_Click(object sender, RoutedEventArgs e) => MessageBox.Show("Gebruikersbeheer nog niet geïmplementeerd.");
+        private void GenresMenuItem_Click(object sender, RoutedEventArgs e) => MainTabControl.SelectedIndex = 2;
+        private void UsersMenuItem_Click(object sender, RoutedEventArgs e) => MainTabControl.SelectedIndex = 3;
     }
 }
