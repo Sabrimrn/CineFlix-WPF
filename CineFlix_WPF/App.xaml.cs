@@ -21,98 +21,63 @@ namespace CineFlix_WPF
 
         protected override async void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
+
             _host = Host.CreateDefaultBuilder()
-                .ConfigureAppConfiguration((context, config) =>
-                {
-                    config.SetBasePath(Directory.GetCurrentDirectory());
-                    config.AddJsonFile("appsettings.json", optional: true);
-                    config.AddUserSecrets<App>(optional: true);
-                    config.AddEnvironmentVariables();
-                })
                 .ConfigureServices((context, services) =>
                 {
                     // Registreer DbContext
-                    services.AddDbContext<CineFlixDbContext>(options =>
-                    {
-                        var connectionString = context.Configuration.GetConnectionString("DefaultConnection")
-                            ?? "Server=(localdb)\\mssqllocaldb;Database=CineFlixDb;Trusted_Connection=true;MultipleActiveResultSets=true;TrustServerCertificate=true";
-                        options.UseSqlServer(connectionString);
-                    });
+                    services.AddDbContext<CineFlixDbContext>();
 
                     // Configureer Identity
                     services.AddIdentity<CineFlixUser, IdentityRole>(options =>
                     {
-                        // Wachtwoord instellingen
-                        options.Password.RequireDigit = true;
-                        options.Password.RequireLowercase = true;
-                        options.Password.RequireUppercase = true;
-                        options.Password.RequireNonAlphanumeric = true;
-                        options.Password.RequiredLength = 6;
-
-                        // Lockout instellingen
-                        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                        options.Lockout.MaxFailedAccessAttempts = 5;
-                        options.Lockout.AllowedForNewUsers = true;
-
-                        // User instellingen
-                        options.User.RequireUniqueEmail = true;
+                        // Basis wachtwoordinstellingen voor testen
+                        options.Password.RequireDigit = false;
+                        options.Password.RequireLowercase = false;
+                        options.Password.RequireUppercase = false;
+                        options.Password.RequireNonAlphanumeric = false;
+                        options.Password.RequiredLength = 4;
                     })
                     .AddEntityFrameworkStores<CineFlixDbContext>()
                     .AddDefaultTokenProviders();
 
-                    // Registreer MainWindow expliciet
-                    services.AddSingleton<MainWindow>();
-
-                    // Registreer overige Windows automatisch
-                    var windowTypes = typeof(App).Assembly.GetTypes()
-                        .Where(t => typeof(Window).IsAssignableFrom(t) && t.IsClass && !t.IsAbstract && t != typeof(MainWindow));
-                    foreach (var wt in windowTypes)
-                    {
-                        services.AddTransient(wt);
-                    }
+                    // Registreer alle vensters voor Dependency Injection
+                    services.AddTransient<MainWindow>();
+                    services.AddTransient<LoginWindow>();
+                    services.AddTransient<RegisterWindow>();
+                    services.AddTransient<FilmWindow>();
+                    // Voeg hier andere vensters toe als je ze maakt (GenreWindow, etc.)
                 })
                 .Build();
 
             await _host.StartAsync();
-
             ServiceProvider = _host.Services;
 
-            // Migreer de database en seed data
+            // Database initialiseren en seeden
             using (var scope = ServiceProvider.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<CineFlixDbContext>();
+                var dbContext = scope.ServiceProvider.GetRequiredService<CineFlixDbContext>();
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<CineFlixUser>>();
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
                 try
                 {
-                    // Voer migraties uit
-                    await context.Database.MigrateAsync();
+                    // Zorgt dat de database bestaat. In productie gebruik je liever MigrateAsync().
+                    await dbContext.Database.EnsureCreatedAsync();
 
-                    // Seed de database
-                    await CineFlixDbContext.Seeder(context, userManager, roleManager);
+                    // Seed de database met basisdata
+                    await CineFlixDbContext.Seeder(dbContext, userManager, roleManager);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Er is een fout opgetreden bij het initialiseren van de database:\n{ex.Message}",
-                        "Database Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Databasefout: {ex.Message}", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
 
-            // Show login window as startup window (minimal required flow)
-            try
-            {
-                var loginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
-                loginWindow.Show();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Kan het login venster niet openen: {ex.Message}", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
-                Shutdown();
-                return;
-            }
-
-            base.OnStartup(e);
+            // Start de applicatie met het Login venster
+            var loginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
+            loginWindow.Show();
         }
 
         protected override async void OnExit(ExitEventArgs e)
@@ -122,20 +87,11 @@ namespace CineFlix_WPF
                 await _host.StopAsync();
                 _host.Dispose();
             }
-
             base.OnExit(e);
         }
 
-        public static bool IsInRole(string role)
-        {
-            return CurrentUserRoles?.Contains(role) ?? false;
-        }
-
-        public static bool IsAdmin()
-        {
-            return IsInRole("Administrator");
-        }
-
+        public static bool IsInRole(string role) => CurrentUserRoles?.Contains(role) ?? false;
+        public static bool IsAdmin() => IsInRole("Administrator");
         public static void Logout()
         {
             CurrentUser = null;

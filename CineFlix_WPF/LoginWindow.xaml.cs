@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace CineFlix_WPF
 {
@@ -12,89 +11,38 @@ namespace CineFlix_WPF
     {
         private readonly UserManager<CineFlixUser> _userManager;
 
-        public LoginWindow()
+        // Constructor wordt aangeroepen door Dependency Injection
+        public LoginWindow(UserManager<CineFlixUser> userManager)
         {
             InitializeComponent();
-            _userManager = App.ServiceProvider.GetRequiredService<UserManager<CineFlixUser>>();
+            _userManager = userManager;
         }
 
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            ErrorMessage.Text = "";
+            var user = await _userManager.FindByEmailAsync(EmailTextBox.Text);
+
+            if (user != null && await _userManager.CheckPasswordAsync(user, PasswordBox.Password))
             {
-                ErrorMessage.Visibility = Visibility.Collapsed;
-
-                // Validatie
-                if (string.IsNullOrWhiteSpace(EmailTextBox.Text) || string.IsNullOrWhiteSpace(PasswordBox.Password))
-                {
-                    ShowError("Vul alle velden in.");
-                    return;
-                }
-
-                // Zoek gebruiker
-                var user = await _userManager.FindByEmailAsync(EmailTextBox.Text);
-                if (user == null)
-                {
-                    ShowError("Ongeldige inloggegevens.");
-                    return;
-                }
-
-                // Check of account niet geblokkeerd is
                 if (user.IsDeleted)
                 {
-                    ShowError("Dit account is geblokkeerd.");
+                    ErrorMessage.Text = "Dit account is geblokkeerd.";
                     return;
                 }
 
-                // Use UserManager to validate password and handle lockout without HttpContext
-                // Controleer of gebruiker al gelocked is
-                if (await _userManager.IsLockedOutAsync(user))
-                {
-                    ShowError("Account is tijdelijk geblokkeerd wegens te veel mislukte pogingen.");
-                    return;
-                }
-
-                // Controleer wachtwoord
-                bool passwordValid = await _userManager.CheckPasswordAsync(user, PasswordBox.Password);
-
-                if (!passwordValid)
-                {
-                    // Verhoog failed count en controleer lockout
-                    await _userManager.AccessFailedAsync(user);
-                    if (await _userManager.IsLockedOutAsync(user))
-                    {
-                        ShowError("Account is tijdelijk geblokkeerd wegens te veel mislukte pogingen.");
-                    }
-                    else
-                    {
-                        ShowError("Ongeldige inloggegevens.");
-                    }
-
-                    return;
-                }
-
-                // Succesvolle login: reset failed count
-                await _userManager.ResetAccessFailedCountAsync(user);
-
-                // Update laatste login datum
-                user.LastLoginDate = DateTime.Now;
-                await _userManager.UpdateAsync(user);
-
-                // Haal rollen op
-                var roles = await _userManager.GetRolesAsync(user);
-
-                // Sla gebruiker en rollen op in App
+                // Sla de gebruiker en zijn rollen op in de App
                 App.CurrentUser = user;
-                App.CurrentUserRoles = roles.ToList();
+                App.CurrentUserRoles = (await _userManager.GetRolesAsync(user)).ToList();
 
-                // Open hoofdvenster
+                // Open het hoofdvenster
                 var mainWindow = App.ServiceProvider.GetRequiredService<MainWindow>();
                 mainWindow.Show();
                 this.Close();
             }
-            catch (Exception ex)
+            else
             {
-                ShowError($"Er is een fout opgetreden: {ex.Message}");
+                ErrorMessage.Text = "Ongeldige e-mail of wachtwoord.";
             }
         }
 
@@ -103,12 +51,6 @@ namespace CineFlix_WPF
             var registerWindow = App.ServiceProvider.GetRequiredService<RegisterWindow>();
             registerWindow.Show();
             this.Close();
-        }
-
-        private void ShowError(string message)
-        {
-            ErrorMessage.Text = message;
-            ErrorMessage.Visibility = Visibility.Visible;
         }
     }
 }
