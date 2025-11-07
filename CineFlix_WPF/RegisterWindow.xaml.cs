@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace CineFlix_WPF
 {
@@ -11,55 +11,54 @@ namespace CineFlix_WPF
     {
         private readonly UserManager<CineFlixUser> _userManager;
 
-        public RegisterWindow()
+        public RegisterWindow(UserManager<CineFlixUser> userManager)
         {
             InitializeComponent();
-            _userManager = App.ServiceProvider.GetRequiredService<UserManager<CineFlixUser>>();
+            _userManager = userManager;
         }
 
-        private async void Register_Click(object sender, RoutedEventArgs e)
+        private async void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            ErrorMessage.Text = "";
+            if (PasswordBox.Password != ConfirmPasswordBox.Password)
             {
-                var emailBox = this.FindName("Email") as TextBox;
-                var firstBox = this.FindName("FirstName") as TextBox;
-                var lastBox = this.FindName("LastName") as TextBox;
-                var passwordBox = this.FindName("Password") as PasswordBox;
-
-                var emailText = emailBox?.Text?.Trim() ?? string.Empty;
-                var firstText = firstBox?.Text?.Trim() ?? string.Empty;
-                var lastText = lastBox?.Text?.Trim() ?? string.Empty;
-                var password = passwordBox?.Password ?? string.Empty;
-
-                var user = new CineFlixUser
-                {
-                    UserName = emailText,
-                    Email = emailText,
-                    FirstName = firstText,
-                    LastName = lastText
-                };
-
-                var res = await _userManager.CreateAsync(user, password);
-                if (res.Succeeded)
-                {
-                    await _userManager.AddToRoleAsync(user, "User");
-                    MessageBox.Show("Registered successfully", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
-                    DialogResult = true;
-                }
-                else
-                {
-                    MessageBox.Show(string.Join("\n", res.Errors));
-                }
+                ErrorMessage.Text = "De wachtwoorden komen niet overeen.";
+                return;
             }
-            catch (Exception ex)
+
+            var user = new CineFlixUser
             {
-                MessageBox.Show($"Error: {ex.Message}", "Fout", MessageBoxButton.OK, MessageBoxImage.Error);
+                FirstName = FirstNameTextBox.Text,
+                LastName = LastNameTextBox.Text,
+                Email = EmailTextBox.Text,
+                UserName = EmailTextBox.Text, // Gebruik e-mail als gebruikersnaam
+                RegistrationDate = DateTime.Now
+            };
+
+            var result = await _userManager.CreateAsync(user, PasswordBox.Password);
+
+            if (result.Succeeded)
+            {
+                // Voeg de nieuwe gebruiker standaard toe aan de 'User' rol
+                await _userManager.AddToRoleAsync(user, "User");
+                MessageBox.Show("Registratie succesvol! Je kunt nu inloggen.", "Succes", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Ga terug naar het login venster
+                var loginWindow = App.ServiceProvider.GetRequiredService<LoginWindow>();
+                loginWindow.Show();
+                this.Close();
+            }
+            else
+            {
+                ErrorMessage.Text = string.Join("\n", result.Errors.Select(e => e.Description));
             }
         }
 
-        private void Close_Click(object sender, RoutedEventArgs e)
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            var loginWindow = App.ServiceProvider.GetRequiredService<LoginWindow>();
+            loginWindow.Show();
+            this.Close();
         }
     }
 }
