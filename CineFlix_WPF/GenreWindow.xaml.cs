@@ -1,18 +1,15 @@
 ﻿using CineFlix_Models;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace CineFlix_WPF
 {
     public partial class GenreWindow : Window
     {
         private readonly CineFlixDbContext _context;
-        private readonly Genre _genre; // Wordt nu in constructor gevuld
+        private readonly Genre _genre;
         private readonly bool _isNew;
 
-        // Constructor voor DI
         public GenreWindow(CineFlixDbContext context, Genre? genre)
         {
             InitializeComponent();
@@ -22,7 +19,7 @@ namespace CineFlix_WPF
             {
                 _genre = new Genre();
                 _isNew = true;
-                Title = "Nieuw Genre";
+                Title = "Nieuw Genre Toevoegen";
             }
             else
             {
@@ -31,19 +28,28 @@ namespace CineFlix_WPF
                 Title = "Genre Bewerken";
             }
 
-            // Vul UI
+            // Vul de UI
             GenreNaamTextBox.Text = _genre.GenreNaam;
+            BeschrijvingTextBox.Text = _genre.Beschrijving;
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(GenreNaamTextBox.Text))
+            {
+                MessageBox.Show("Genre naam is verplicht.", "Validatiefout", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             _genre.GenreNaam = GenreNaamTextBox.Text;
+            _genre.Beschrijving = BeschrijvingTextBox.Text;
 
             if (_isNew) _context.Genres.Add(_genre);
             else _context.Genres.Update(_genre);
 
             await _context.SaveChangesAsync();
             DialogResult = true;
+            this.Close();
         }
     }
 }

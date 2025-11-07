@@ -16,6 +16,7 @@
             <MenuItem Header="_Navigatie">
                 <MenuItem Header="Films" Click="FilmsMenuItem_Click"/>
                 <MenuItem Header="Regisseurs" Click="RegisseursMenuItem_Click"/>
+                <MenuItem Header="Genres" Click="GenresMenuItem_Click"/>
             </MenuItem>
             <MenuItem Header="_Beheer" x:Name="AdminMenu" Visibility="Collapsed">
                 <MenuItem Header="Gebruikers en Rollen" Click="UsersMenuItem_Click"/>
@@ -90,6 +91,38 @@
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                             <Button Content="Bewerken" Margin="2" Click="EditRegisseurButton_Click" Tag="{Binding}"/>
                                             <Button Content="Verwijderen" Margin="2" Click="DeleteRegisseurButton_Click" Tag="{Binding}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- Genres Tab -->
+            <TabItem Header="Genres">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button Content="Nieuw Genre" Click="AddGenreButton_Click" Margin="0,0,10,0"/>
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1" x:Name="GenresDataGrid" AutoGenerateColumns="False" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Genre" Binding="{Binding GenreNaam}" Width="*"/>
+                            <DataGridTextColumn Header="Beschrijving" Binding="{Binding Beschrijving}" Width="2*"/>
+                            <DataGridTextColumn Header="Aantal Films" Binding="{Binding AantalFilms}" Width="*"/>
+                            <DataGridTemplateColumn Header="Acties" Width="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Content="Bewerken" Margin="2" Click="EditGenreButton_Click" Tag="{Binding}"/>
+                                            <Button Content="Verwijderen" Margin="2" Click="DeleteGenreButton_Click" Tag="{Binding}"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
