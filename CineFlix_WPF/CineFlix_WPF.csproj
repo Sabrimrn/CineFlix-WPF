@@ -6,18 +6,16 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
-		<!-- Een UserSecretsId is goed om te hebben, maar niet strikt noodzakelijk als je de connection string in de code laat. -->
-		<UserSecretsId>a1b2c3d4-e5f6-7890-1234-567890abcdef</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- Dit pakket is nodig voor de Dependency Injection Host (IHost) -->
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
+		<!-- Forceer exact dezelfde versie voor alle gedeelde pakketten -->
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0-preview.5.24306.7" />
+		<PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.0-preview.5.24306.11" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- De verwijzing naar je datamodellen -->
-		<ProjectReference Include="..\CineFlix_Models\CineFlix_Models.csproj" />
+		<ProjectReference Include="..\Cineflix_Models\Cineflix_Models.csproj" />
 	</ItemGroup>
 
 </Project>
