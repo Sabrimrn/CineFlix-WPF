@@ -33,7 +33,37 @@ namespace CineFlix_Models
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<FilmGenre>().HasKey(fg => new { fg.FilmId, fg.GenreId });
+            builder.Entity<Film>().HasQueryFilter(m => !m.IsDeleted);
+            builder.Entity<Regisseur>().HasQueryFilter(m => !m.IsDeleted);
+            builder.Entity<Genre>().HasQueryFilter(m => !m.IsDeleted);
+        }
+
+        public override int SaveChanges()
+        {
+            UpdateSoftDeleteStatuses();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            UpdateSoftDeleteStatuses();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        private void UpdateSoftDeleteStatuses()
+        {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (entry.State == EntityState.Deleted)
+                {
+                    
+                    if (entry.Entity.GetType().GetProperty("isDeleted") != null)
+                    {
+                        entry.State = EntityState.Modified;
+                        entry.Property("isDeleted").CurrentValue = true;
+                    }
+                }
+            }
         }
 
         // --- Seeder ---
