@@ -58,8 +58,9 @@ namespace CineFlix_WPF
 
             // --- DE FIX IS HIER ---
             // De AddDbContext-regel is nu compleet en correct.
+            string dbPath = @"Data Source=C:\Users\sabri\source\repos\CineFlix\CineFlix_WPF\cineflix.db";
             services.AddDbContext<CineFlixDbContext>(options =>
-                options.UseSqlite(@"Data Source=C:\Users\sabri\source\repos\CineFlix\CineFlix_WPF\bin\Debug\net9.0-windows\cineflix.db")
+                options.UseSqlite(dbPath)
             );
             // --- EINDE FIX ---
 
