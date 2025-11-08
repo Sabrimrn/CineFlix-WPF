@@ -60,7 +60,7 @@ namespace CineFlix_WPF
             services.AddLogging();
 
             services.AddDbContext<CineFlixDbContext>(options =>
-                options.UseSqlite("Data Source=..\\..\\cineflix.db"));
+                options.UseSqlite(@"Data Source=C:\Users\sabri\source\repos\CineFlix\CineFlix_WPF\cineflix.db"));
 
             services.AddIdentity<CineFlixUser, IdentityRole>(options =>
             {

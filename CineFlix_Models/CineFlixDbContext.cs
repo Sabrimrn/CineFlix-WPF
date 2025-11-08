@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration; // Nodig voor ConfigurationBuilder
+using Microsoft.Extensions.Options;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace CineFlix_Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite("Data Source=..\\..\\cineflix.db");
+                optionsBuilder.UseSqlite(@"Data Source=C:\Users\sabri\source\repos\CineFlix\CineFlix_WPF\cineflix.db");
             }
             base.OnConfiguring(optionsBuilder);
         }
