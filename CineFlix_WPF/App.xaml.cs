@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
+using System.IO;
 
 namespace CineFlix_WPF
 {
@@ -58,9 +59,15 @@ namespace CineFlix_WPF
             services.AddLogging();
 
 
-            string dbPath = @"Data Source=C:\Users\sabri\source\repos\CineFlix\CineFlix_WPF\cineflix.db";
+            string exePath = AppContext.BaseDirectory;
+
+            // Vanuit de uitvoermap (bv. bin/Debug/net6.0) 3 niveaus omhoog naar de projectmap
+            string projectPath = Path.GetFullPath(Path.Combine(exePath, "..\\..\\..\\"));
+
+            string dbPath = Path.Combine(projectPath, "cineflix.db");
+
             services.AddDbContext<CineFlixDbContext>(options =>
-                options.UseSqlite(dbPath)
+                options.UseSqlite($"Data Source={dbPath}")
 
              );
             

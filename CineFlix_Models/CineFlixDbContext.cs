@@ -24,8 +24,7 @@ namespace CineFlix_Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                string dbPath = @"Data Source=C:\Users\sabri\source\repos\CineFlix\CineFlix_WPF\cineflix.db";
-                optionsBuilder.UseSqlite(dbPath);
+                optionsBuilder.UseSqlite("Data Source=cineflix.db");
 
             }
             base.OnConfiguring(optionsBuilder);
