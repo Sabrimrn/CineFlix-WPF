@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -56,13 +57,13 @@ namespace CineFlix_WPF
         {
             services.AddLogging();
 
-            // --- DE FIX IS HIER ---
-            // De AddDbContext-regel is nu compleet en correct.
+
             string dbPath = @"Data Source=C:\Users\sabri\source\repos\CineFlix\CineFlix_WPF\cineflix.db";
             services.AddDbContext<CineFlixDbContext>(options =>
                 options.UseSqlite(dbPath)
-            );
-            // --- EINDE FIX ---
+
+             );
+            
 
             services.AddIdentity<CineFlixUser, IdentityRole>(options =>
             {
