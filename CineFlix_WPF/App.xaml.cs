@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace CineFlix_WPF
@@ -11,24 +13,41 @@ namespace CineFlix_WPF
     {
         public static IServiceProvider ServiceProvider { get; private set; } = null!;
 
+        // --- DE ALLERLAATSTE FIX ---
+        // Het overbodige 'public' voor 'set' is weggehaald.
+        public static CineFlixUser? CurrentUser { get; set; }
+        public static IList<string>? CurrentUserRoles { get; set; }
+        // --- EINDE FIX ---
+
+        public static bool IsAdmin => CurrentUserRoles?.Contains("Admin") ?? false;
+
+        public static async Task LoginAsync(CineFlixUser user)
+        {
+            CurrentUser = user;
+            var userManager = ServiceProvider.GetRequiredService<UserManager<CineFlixUser>>();
+            CurrentUserRoles = await userManager.GetRolesAsync(user);
+        }
+
+        public static void Logout()
+        {
+            CurrentUser = null;
+            CurrentUserRoles = null;
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             var services = new ServiceCollection();
             ConfigureServices(services);
             ServiceProvider = services.BuildServiceProvider();
 
-            // Voer de database seeder uit bij het opstarten
-            // We halen de benodigde services op uit de DI container
             using (var scope = ServiceProvider.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<CineFlixDbContext>();
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<CineFlixUser>>();
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-                // Roep de Seeder aan
                 CineFlixDbContext.Seeder(dbContext, userManager, roleManager).Wait();
             }
-
 
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
@@ -38,15 +57,11 @@ namespace CineFlix_WPF
 
         private void ConfigureServices(IServiceCollection services)
         {
-            // --- DE FIX IS HIER ---
-            // Voeg logging services toe. Dit is nodig voor UserManager.
             services.AddLogging();
 
-            // Voeg de DbContext toe
             services.AddDbContext<CineFlixDbContext>(options =>
-                options.UseSqlite("Data Source=cineflix.db"));
+                options.UseSqlite("Data Source=..\\..\\cineflix.db"));
 
-            // Voeg Identity services toe
             services.AddIdentity<CineFlixUser, IdentityRole>(options =>
             {
                 options.Password.RequiredLength = 6;
@@ -57,9 +72,8 @@ namespace CineFlix_WPF
             .AddEntityFrameworkStores<CineFlixDbContext>()
             .AddDefaultTokenProviders();
 
-            // Voeg vensters toe aan de DI container
             services.AddTransient<MainWindow>();
-            // services.AddTransient<LoginWindow>(); // etc.
+            // services.AddTransient<LoginWindow>();
         }
     }
 }

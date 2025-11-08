@@ -23,9 +23,9 @@ namespace CineFlix_Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                // Gebruik UseSqlite, niet UseSqlServer
-                optionsBuilder.UseSqlite("Data Source=cineflix.db");
+                optionsBuilder.UseSqlite("Data Source=..\\..\\cineflix.db");
             }
+            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

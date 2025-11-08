@@ -52,7 +52,7 @@ namespace CineFlix_WPF
             await LoadFilmsAsync();
             await LoadRegisseursAsync();
             await LoadGenresAsync();
-            if (App.IsAdmin())
+            if (App.IsAdmin)
             {
                 await LoadUsersAsync();
             }
@@ -63,7 +63,7 @@ namespace CineFlix_WPF
             if (App.CurrentUser != null)
             {
                 StatusTextBlock.Text = $"Ingelogd als: {App.CurrentUser.FullName} ({string.Join(", ", App.CurrentUserRoles ?? new System.Collections.Generic.List<string>())})";
-                if (App.IsAdmin())
+                if (App.IsAdmin)
                 {
                     // Maak de admin-specifieke UI elementen zichtbaar
                     UsersTab.Visibility = Visibility.Visible;
