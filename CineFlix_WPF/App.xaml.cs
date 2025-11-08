@@ -13,11 +13,8 @@ namespace CineFlix_WPF
     {
         public static IServiceProvider ServiceProvider { get; private set; } = null!;
 
-        // --- DE ALLERLAATSTE FIX ---
-        // Het overbodige 'public' voor 'set' is weggehaald.
         public static CineFlixUser? CurrentUser { get; set; }
         public static IList<string>? CurrentUserRoles { get; set; }
-        // --- EINDE FIX ---
 
         public static bool IsAdmin => CurrentUserRoles?.Contains("Admin") ?? false;
 
@@ -49,8 +46,8 @@ namespace CineFlix_WPF
                 CineFlixDbContext.Seeder(dbContext, userManager, roleManager).Wait();
             }
 
-            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-            mainWindow.Show();
+            var loginWindow = ServiceProvider.GetRequiredService<LoginWindow>();
+            loginWindow.Show();
 
             base.OnStartup(e);
         }
@@ -59,8 +56,12 @@ namespace CineFlix_WPF
         {
             services.AddLogging();
 
+            // --- DE FIX IS HIER ---
+            // De AddDbContext-regel is nu compleet en correct.
             services.AddDbContext<CineFlixDbContext>(options =>
-                options.UseSqlite(@"Data Source=C:\Users\sabri\source\repos\CineFlix\CineFlix_WPF\cineflix.db"));
+                options.UseSqlite(@"Data Source=C:\Users\sabri\source\repos\CineFlix\CineFlix_WPF\bin\Debug\net9.0-windows\cineflix.db")
+            );
+            // --- EINDE FIX ---
 
             services.AddIdentity<CineFlixUser, IdentityRole>(options =>
             {
@@ -73,7 +74,7 @@ namespace CineFlix_WPF
             .AddDefaultTokenProviders();
 
             services.AddTransient<MainWindow>();
-            // services.AddTransient<LoginWindow>();
+            services.AddTransient<LoginWindow>();
         }
     }
 }

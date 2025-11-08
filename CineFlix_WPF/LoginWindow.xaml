@@ -10,7 +10,7 @@
             <TextBlock Text="Inloggen" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
 
             <Label Content="E-mail:"/>
-            <TextBox x:Name="EmailTextBox" Text="admin@cineflix.com"/>
+            <TextBox x:Name="UsernameTextBox" Text="admin@cineflix.com"/>
 
             <Label Content="Wachtwoord:"/>
             <PasswordBox x:Name="PasswordBox" Password="Admin123!"/>

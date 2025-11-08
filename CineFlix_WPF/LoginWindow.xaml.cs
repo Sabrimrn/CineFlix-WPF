@@ -1,56 +1,69 @@
 ﻿using CineFlix_Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace CineFlix_WPF
 {
+    /// <summary>
+    /// Interaction logic for LoginWindow.xaml
+    /// </summary>
     public partial class LoginWindow : Window
     {
+        // We halen de UserManager op om gebruikers te beheren en wachtwoorden te controleren.
         private readonly UserManager<CineFlixUser> _userManager;
 
-        // Constructor wordt aangeroepen door Dependency Injection
-        public LoginWindow(UserManager<CineFlixUser> userManager)
+        public LoginWindow()
         {
             InitializeComponent();
-            _userManager = userManager;
+
+            // Haal de UserManager op uit de ServiceProvider die we in App.xaml.cs hebben gemaakt.
+            // Dit is de correcte manier om services te gebruiken in je vensters.
+            _userManager = App.ServiceProvider.GetRequiredService<UserManager<CineFlixUser>>();
         }
 
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            ErrorMessage.Text = "";
-            var user = await _userManager.FindByEmailAsync(EmailTextBox.Text);
+            string username = UsernameTextBox.Text;
+            string password = PasswordBox.Password;
 
-            if (user != null && await _userManager.CheckPasswordAsync(user, PasswordBox.Password))
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
-                if (user.IsDeleted)
-                {
-                    ErrorMessage.Text = "Dit account is geblokkeerd.";
-                    return;
-                }
+                MessageBox.Show("Vul alstublieft zowel gebruikersnaam als wachtwoord in.", "Invoerfout", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-                // Sla de gebruiker en zijn rollen op in de App
-                App.CurrentUser = user;
-                App.CurrentUserRoles = (await _userManager.GetRolesAsync(user)).ToList();
+            // Zoek de gebruiker op basis van de ingevoerde gebruikersnaam (e-mail).
+            var user = await _userManager.FindByEmailAsync(username);
 
-                // Open het hoofdvenster
+            // Controleer of de gebruiker bestaat en of het wachtwoord correct is.
+            if (user != null && await _userManager.CheckPasswordAsync(user, password))
+            {
+                // De login is succesvol!
+
+                // 1. Stel de ingelogde gebruiker in voor de hele applicatie via App.xaml.cs
+                await App.LoginAsync(user);
+
+                // 2. Haal een nieuwe MainWindow op uit de ServiceProvider.
                 var mainWindow = App.ServiceProvider.GetRequiredService<MainWindow>();
+
+                // 3. Toon de MainWindow.
                 mainWindow.Show();
+
+                // 4. Sluit dit login-venster.
                 this.Close();
             }
             else
             {
-                ErrorMessage.Text = "Ongeldige e-mail of wachtwoord.";
+                // De login is mislukt. Toon een foutmelding.
+                MessageBox.Show("De combinatie van gebruikersnaam en wachtwoord is onjuist.", "Login Mislukt", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            var registerWindow = App.ServiceProvider.GetRequiredService<RegisterWindow>();
-            registerWindow.Show();
-            this.Close();
+            // TODO: Implementeer logica om het registratievenster te openen.
+            MessageBox.Show("Registratie-functionaliteit is nog niet geïmplementeerd.", "In Ontwikkeling");
         }
     }
 }
