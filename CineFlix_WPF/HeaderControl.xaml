@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="CineFlix_WPF.HeaderControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" d:DesignWidth="800" Height="64">
+    <Grid Background="#FF4A4A4A">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Column="0" Text="CineFlix Beheer" FontSize="20" FontWeight="Bold" 
+                   VerticalAlignment="Center" Margin="15,0" Foreground="White"/>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
+            <TextBlock Text="Ingelogd als: " Foreground="LightGray"/>
+            <TextBlock x:Name="LoggedInUserTextBlock" Foreground="White" FontWeight="SemiBold"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
