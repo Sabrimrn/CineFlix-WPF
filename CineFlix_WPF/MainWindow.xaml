@@ -12,7 +12,7 @@
     <DockPanel>
         <local:HeaderControl DockPanel.Dock="Top"/>
 
-        <!-- Menu (Jouw bestaande code) -->
+        <!-- Menu  -->
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Bestand">
                 <MenuItem Header="_Uitloggen" Click="LogoutMenuItem_Click"/>
@@ -29,14 +29,14 @@
             </MenuItem>
         </Menu>
 
-        <!-- Statusbalk (Jouw bestaande code) -->
+        <!-- Statusbalk -->
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
                 <TextBlock x:Name="StatusTextBlock" Margin="5,0"/>
             </StatusBarItem>
         </StatusBar>
 
-        <!-- Hoofdinhoud met Tabs (Jouw bestaande code) -->
+        <!-- Hoofdinhoud met Tabs -->
         <TabControl x:Name="MainTabControl">
             <!-- Films Tab -->
             <TabItem Header="Films">

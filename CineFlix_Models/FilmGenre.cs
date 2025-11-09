@@ -29,7 +29,7 @@ namespace CineFlix_Models
         // Extra property voor sortering
         public int SortOrder { get; set; } = 0;
 
-        // Soft delete (optioneel, meestal niet nodig voor koppeltabellen)
+        // Soft delete 
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletedOn { get; set; }
 

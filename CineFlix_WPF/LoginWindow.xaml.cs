@@ -6,9 +6,6 @@ using System.Windows.Controls;
 
 namespace CineFlix_WPF
 {
-    /// <summary>
-    /// Interaction logic for LoginWindow.xaml
-    /// </summary>
     public partial class LoginWindow : Window
     {
         // We halen de UserManager op om gebruikers te beheren en wachtwoorden te controleren.
@@ -18,8 +15,7 @@ namespace CineFlix_WPF
         {
             InitializeComponent();
 
-            // Haal de UserManager op uit de ServiceProvider die we in App.xaml.cs hebben gemaakt.
-            // Dit is de correcte manier om services te gebruiken in je vensters.
+            // Haal de UserManager op uit de ServiceProvider die ik in App.xaml.cs hebben gemaakt.
             _userManager = App.ServiceProvider.GetRequiredService<UserManager<CineFlixUser>>();
         }
 
@@ -40,7 +36,7 @@ namespace CineFlix_WPF
             // Controleer of de gebruiker bestaat en of het wachtwoord correct is.
             if (user != null && await _userManager.CheckPasswordAsync(user, password))
             {
-                // De login is succesvol!
+                // De login is succesvol
 
                 // 1. Stel de ingelogde gebruiker in voor de hele applicatie via App.xaml.cs
                 await App.LoginAsync(user);
@@ -62,7 +58,7 @@ namespace CineFlix_WPF
         }
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Implementeer logica om het registratievenster te openen.
+            // Implementeer logica om het registratievenster te openen.
             MessageBox.Show("Registratie-functionaliteit is nog niet geïmplementeerd.", "In Ontwikkeling");
         }
     }

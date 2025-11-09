@@ -8,7 +8,6 @@
         Title="Film Bewerken" Height="480" Width="500"
         WindowStartupLocation="CenterOwner">
 
-    <!-- Het commentaar staat nu HIER, op een geldige plek, niet meer in de <Window> tag. -->
 
     <Grid Margin="15">
         <StackPanel>

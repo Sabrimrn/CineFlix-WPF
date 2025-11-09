@@ -43,7 +43,7 @@ namespace CineFlix_WPF
             if (sender is ToggleButton button && button.Tag != null)
             {
                 int rating = int.Parse(button.Tag.ToString() ?? "0");
-                // Als je op een ster klikt, passen we de 'Value' aan.
+                // Als je op een ster klikt, past het de 'Value' aan.
                 // Dit zorgt ervoor dat OnValueChanged wordt aangeroepen en de sterren geüpdatet worden.
                 this.Value = rating;
             }
@@ -59,7 +59,5 @@ namespace CineFlix_WPF
             Star5.IsChecked = rating >= 5;
         }
 
-        // We hebben SetRating() niet meer nodig, omdat we direct de Value property kunnen gebruiken.
-        // public void SetRating(int rating) { ... }
     }
 }

@@ -55,14 +55,13 @@ namespace CineFlix_WPF
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<CineFlix_Models.CineFlixUser> _userManager;
 
-        // HIER IS DE VERANDERING:
-        // We voegen een vraagteken (?) toe om aan te geven dat _user null mag zijn.
+        // Een vraagteken (?) toevoegen om aan te geven dat _user null mag zijn.
         private CineFlix_Models.CineFlixUser? _user;
 
         public RolesWindow()
         {
             InitializeComponent();
-            // We halen de services op via de App ServiceProvider
+            // Haalt de services op via de App ServiceProvider
             _roleManager = App.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             _userManager = App.ServiceProvider.GetRequiredService<UserManager<CineFlix_Models.CineFlixUser>>();
         }
@@ -88,7 +87,7 @@ namespace CineFlix_WPF
                 // Controleer of de rolnaam niet null is
                 if (role.Name != null)
                 {
-                    // Omdat we nu in de if-statement zitten, weet de compiler dat role.Name niet null is.
+                    // Omdat het nu in de if-statement zit, weet de compiler dat role.Name niet null is.
                     list.Add(new RoleItem { Name = role.Name, IsChecked = userRoles.Contains(role.Name) });
                 }
             }
@@ -140,10 +139,6 @@ namespace CineFlix_WPF
             this.DialogResult = false;
             this.Close();
         }
-
-        private void RolesListBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            // Deze methode is niet nodig, je kunt hem leeg laten.
-        }
+        
     }
 }

@@ -26,7 +26,7 @@ namespace CineFlix_WPF
             }
             else
             {
-                // Dit is een bestaande regisseur. We laden hem opnieuw om zeker te zijn dat hij gevolgd wordt door de DbContext.
+                // Dit is een bestaande regisseur. Ik laad hem opnieuw om zeker te zijn dat hij gevolgd wordt door de DbContext.
                 _regisseur = _context.Regisseurs.Single(r => r.RegisseurId == regisseur.RegisseurId);
                 _isNew = false;
                 Title = "Regisseur Bewerken";
@@ -66,7 +66,7 @@ namespace CineFlix_WPF
             }
             else
             {
-                _regisseur.Geboortejaar = null; // Maak het veld leeg als de input ongeldig is
+                _regisseur.Geboortejaar = null; // Maakt het veld leeg als de input ongeldig is
             }
 
             if (_isNew)
