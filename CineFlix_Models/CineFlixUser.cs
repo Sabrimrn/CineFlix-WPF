@@ -10,7 +10,7 @@ namespace CineFlix_Models
 {
     public class CineFlixUser : IdentityUser
     {
-        // Extra eigenschappen voor CineFlixUser
+        // eigenschappen voor CineFlixUser
         [Required]
         [Display(Name = "Voornaam")]
         [StringLength(50)]
