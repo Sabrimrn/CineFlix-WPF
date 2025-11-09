@@ -102,9 +102,10 @@ Deze pakketten worden geleverd door Microsoft als onderdeel van het .NET ecosyst
 
 ## Gebruik van AI-Tools
 
-Bij de ontwikkeling van dit project is gebruikgemaakt van GitHub Copilot. De AI-assistent is voornamelijk ingezet voor:
-*   Het versnellen van het schrijven van boilerplate code (bv. XAML-definities en model properties).
-*   Het helpen bij het oplossen van specifieke, hardnekkige bugs, zoals de configuratie van het databasepad en de correcte implementatie van de data seeder.
-*   Het genereren van suggesties voor de structuur van `try-catch` blokken en LINQ-queries.
+Tijdens het bouwen van dit project heb ik GitHub Copilot als een soort 'bijrijder' gebruikt.
 
-De kernlogica en de architectuur van de applicatie zijn zelf ontworpen en geïmplementeerd. De AI diende als een productiviteitshulpmiddel en debugger, niet als de primaire auteur.
+Het was vooral handig voor het snellere typewerk, zoals het aanvullen van de properties in de modellen of het opzetten van de basis-layout in de XAML. Ook bij het bouwen van de HeaderControl heb ik om voorbeelden gevraagd.
+
+Waar het echt het verschil maakte, was bij het oplossen van een paar specifieke bugs waar ik zelf even niet uitkwam, zoals het probleem met het databasepad en de seeder die in het begin niet alle data meepakte.
+
+Ik heb Copilot dus vooral gebruikt om sneller te kunnen werken en voor hulp bij problemen, maar de uiteindelijke keuzes en de structuur van de app heb ik zelf bepaald.
