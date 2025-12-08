@@ -3,12 +3,12 @@
     x:Class="CineFlix_Mobile.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:CineFlix_Mobile"
+    xmlns:views="clr-namespace:CineFlix_Mobile.Views"
     Title="CineFlix_Mobile">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Films"
+        ContentTemplate="{DataTemplate views:FilmsPage}"
+        Route="FilmsPage" />
 
 </Shell>

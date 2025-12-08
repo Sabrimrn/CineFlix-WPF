@@ -1,0 +1,29 @@
+<ContentPage.BindingContext>
+    <vm:FilmsViewModel />
+</ContentPage.BindingContext>
+
+<Grid RowDefinitions="Auto, *">
+    <!-- Header / Zoekbalk (komt later) -->
+    <SearchBar Grid.Row="0" Placeholder="Zoek op titel..." />
+
+    <!-- De Lijst met Films -->
+    <CollectionView Grid.Row="1" ItemsSource="{Binding Films}">
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="model:Film">
+                <Frame Margin="10" Padding="0" CornerRadius="10" HasShadow="True">
+                    <Grid ColumnDefinitions="100, *" HeightRequest="150">
+                        <!-- Afbeelding (placeholder) -->
+                        <Image Grid.Column="0" Source="dotnet_bot.png" Aspect="AspectFill" BackgroundColor="Gray"/>
+
+                        <StackPanel Grid.Column="1" Padding="10">
+                            <Label Text="{Binding Titel}" FontSize="18" FontAttributes="Bold" />
+                            <Label Text="{Binding Releasejaar}" TextColor="Gray" />
+                            <Label Text="{Binding Rating, StringFormat='Rating: {0:F1}'}" TextColor="#E74C3C" />
+                        </StackPanel>
+                    </Grid>
+                </Frame>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</Grid>
+</ContentPage>
