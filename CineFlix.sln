@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36511.14 d17.14
+VisualStudioVersion = 17.14.36511.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CineFlix_Models", "CineFlix_Models\CineFlix_Models.csproj", "{B9338288-8868-4675-AA3B-BF4B29B922AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CineFlix_WPF", "CineFlix_WPF\CineFlix_WPF.csproj", "{DCF528BF-0708-49AD-8064-3CB2A3DF6D87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CineFlix_Web", "CineFlix_Web\CineFlix_Web.csproj", "{4F89D34C-2261-481A-9787-0D6266A0996F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CineFlix_Mobile", "CineFlix_Mobile\CineFlix_Mobile.csproj", "{9C1C6430-E50D-436D-A624-DD56B903C603}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{DCF528BF-0708-49AD-8064-3CB2A3DF6D87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCF528BF-0708-49AD-8064-3CB2A3DF6D87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCF528BF-0708-49AD-8064-3CB2A3DF6D87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F89D34C-2261-481A-9787-0D6266A0996F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F89D34C-2261-481A-9787-0D6266A0996F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F89D34C-2261-481A-9787-0D6266A0996F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F89D34C-2261-481A-9787-0D6266A0996F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C1C6430-E50D-436D-A624-DD56B903C603}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C1C6430-E50D-436D-A624-DD56B903C603}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C1C6430-E50D-436D-A624-DD56B903C603}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C1C6430-E50D-436D-A624-DD56B903C603}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
