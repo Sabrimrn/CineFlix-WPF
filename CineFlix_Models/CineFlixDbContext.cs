@@ -78,6 +78,10 @@ namespace CineFlix_Models
             {
                 await roleManager.CreateAsync(new IdentityRole("User"));
             }
+            if (!await roleManager.RoleExistsAsync("Manager"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("Manager"));
+            }
 
             var adminUser = await userManager.FindByEmailAsync("admin@cineflix.com");
             if (adminUser == null)
@@ -85,6 +89,14 @@ namespace CineFlix_Models
                 adminUser = new CineFlixUser { UserName = "admin@cineflix.com", Email = "admin@cineflix.com", FirstName = "Admin", LastName = "Istrator", RegistrationDate = DateTime.Now, EmailConfirmed = true };
                 await userManager.CreateAsync(adminUser, "Admin123!");
                 await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
+
+            var managerUser = await userManager.FindByEmailAsync("manager@cineflix.com");
+            if (managerUser == null)
+            {
+                managerUser = new CineFlixUser { UserName = "manager@cineflix.com", Email = "manager@cineflix.com", FirstName = "Manager", LastName = "User", RegistrationDate = DateTime.Now, EmailConfirmed = true };
+                await userManager.CreateAsync(managerUser, "Manager123!");
+                await userManager.AddToRoleAsync(managerUser, "Manager");
             }
 
             var normalUser = await userManager.FindByEmailAsync("user@cineflix.com");

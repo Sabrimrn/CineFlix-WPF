@@ -1,31 +1,30 @@
 ﻿using System.Collections.ObjectModel;
-using CineFlix_Models; // Je gedeelde modellen!
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using CineFlix_Models; // Zorg dat de referentie bestaat!
 
 namespace CineFlix_Mobile.ViewModels
 {
-    // Dit is een basis MVVM ViewModel.
-    // In de toekomst kun je de CommunityToolkit.Mvvm gebruiken om dit korter te maken.
     public class FilmsViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<Film> Films { get; set; } = new ObservableCollection<Film>();
 
+        // Event handler nullable maken met '?'
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public FilmsViewModel()
         {
-            // Tijdelijke dummy data om te testen of de layout werkt
             LoadDummyData();
         }
 
         private void LoadDummyData()
         {
+            // Gebruik de static data uit je model als die bestaat, anders handmatig
             Films.Add(new Film { Titel = "Inception", Releasejaar = 2010, Rating = 4.8 });
             Films.Add(new Film { Titel = "Interstellar", Releasejaar = 2014, Rating = 4.7 });
-            Films.Add(new Film { Titel = "The Dark Knight", Releasejaar = 2008, Rating = 4.9 });
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        protected void OnPropertyChanged([CallerMemberName] string? name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
