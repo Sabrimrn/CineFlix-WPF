@@ -36,6 +36,7 @@ namespace CineFlix_Models
             builder.Entity<Film>().HasQueryFilter(m => !m.IsDeleted);
             builder.Entity<Regisseur>().HasQueryFilter(m => !m.IsDeleted);
             builder.Entity<Genre>().HasQueryFilter(m => !m.IsDeleted);
+            builder.Entity<FilmGenre>().HasQueryFilter(m => !m.IsDeleted);
         }
 
         public override int SaveChanges()

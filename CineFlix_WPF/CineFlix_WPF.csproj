@@ -15,7 +15,7 @@
 
 	<ItemGroup>
 		<!-- Deze zijn nog steeds nodig, maar de FrameworkReference maakt ze bruikbaar -->
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0-preview.5.24306.7" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

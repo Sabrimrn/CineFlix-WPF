@@ -1,0 +1,65 @@
+﻿@model IEnumerable<CineFlix_Models.Regisseur>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Naam)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Geboortejaar)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nationaliteit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Biografie)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDeleted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeletedOn)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Naam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Geboortejaar)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nationaliteit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Biografie)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDeleted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeletedOn)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.RegisseurId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.RegisseurId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.RegisseurId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
