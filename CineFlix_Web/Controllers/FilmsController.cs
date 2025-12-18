@@ -20,10 +20,39 @@ namespace CineFlix_Web.Controllers
         }
 
         // GET: Films
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
-            var cineFlixDbContext = _context.Films.Include(f => f.AddedByUser).Include(f => f.Regisseur);
-            return View(await cineFlixDbContext.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
+            ViewData["RatingSortParm"] = sortOrder == "Rating" ? "rating_desc" : "Rating";
+
+            // Alles selecteren
+            var filmsQuery = _context.Films.Include(f => f.Regisseur).AsQueryable();
+
+            // FILTEREN: Als er gezocht wordt, filter de lijst
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                filmsQuery = filmsQuery.Where(s => s.Titel.Contains(searchString));
+            }
+
+            // SORTEREN: Kijk waar op geklikt is
+            switch (sortOrder)
+            {
+                case "date_desc":
+                    filmsQuery = filmsQuery.OrderByDescending(s => s.Releasejaar);
+                    break;
+                case "Rating":
+                    filmsQuery = filmsQuery.OrderBy(s => s.Rating);
+                    break;
+                case "rating_desc":
+                    filmsQuery = filmsQuery.OrderByDescending(s => s.Rating);
+                    break;
+                default: // Standaard sortering 
+                    filmsQuery = filmsQuery.OrderBy(s => s.Titel);
+                    break;
+            }
+
+            return View(await filmsQuery.ToListAsync());
         }
 
         // GET: Films/Details/5
