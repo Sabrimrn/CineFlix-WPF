@@ -18,16 +18,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Beschrijving)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Kleur)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeletedOn)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -40,18 +30,12 @@
                 @Html.DisplayFor(modelItem => item.Beschrijving)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Kleur)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDeleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedOn)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.GenreId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.GenreId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.GenreId">Delete</a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.GenreId">Bewerk</a> <span>|</span>
+                    <a asp-action="Delete" asp-route-id="@item.GenreId">Verwijder</a> <span>|</span>
+                }
+                <a asp-action="Details" asp-route-id="@item.GenreId">Details</a>
             </td>
         </tr>
 }

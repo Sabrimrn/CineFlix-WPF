@@ -33,16 +33,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Regisseur)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddedByUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeletedOn)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -70,18 +60,17 @@
                 @Html.DisplayFor(modelItem => item.Regisseur.Naam)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AddedByUser.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDeleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedOn)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.FilmId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.FilmId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.FilmId">Delete</a>
+                @* Iedereen mag Details zien *@
+                <a asp-action="Details" asp-route-id="@item.FilmId" class="btn btn-info btn-sm">Details</a>
+
+                @* Alleen Admin mag Edit en Delete zien *@
+                @if (User.IsInRole("Admin"))
+                  {
+                     <span> | </span>
+                     <a asp-action="Edit" asp-route-id="@item.FilmId" class="btn btn-warning btn-sm">Edit</a>
+                     <span> | </span>
+                     <a asp-action="Delete" asp-route-id="@item.FilmId" class="btn btn-danger btn-sm">Delete</a>
+                  }
             </td>
         </tr>
 }

@@ -52,27 +52,12 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Regisseur.Naam)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AddedByUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AddedByUser.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsDeleted)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsDeleted)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeletedOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeletedOn)
-        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.FilmId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.FilmId" class="btn btn-warning">Edit</a> <span> | </span>
+    }
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

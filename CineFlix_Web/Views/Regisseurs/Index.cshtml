@@ -7,7 +7,11 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create">Create New</a>
+    }
+
 </p>
 <table class="table">
     <thead>
@@ -24,13 +28,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Biografie)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeletedOn)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -49,15 +46,12 @@
                 @Html.DisplayFor(modelItem => item.Biografie)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IsDeleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedOn)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.RegisseurId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RegisseurId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RegisseurId">Delete</a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.RegisseurId">Bewerk</a> <span>|</span>
+                    <a asp-action="Delete" asp-route-id="@item.RegisseurId">Verwijder</a> <span>|</span>
+                }
+                <a asp-action="Details" asp-route-id="@item.RegisseurId">Details</a>
             </td>
         </tr>
 }

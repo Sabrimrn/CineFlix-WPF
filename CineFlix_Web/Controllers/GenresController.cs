@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CineFlix_Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CineFlix_Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CineFlix_Web.Controllers
 {
@@ -43,16 +44,16 @@ namespace CineFlix_Web.Controllers
         }
 
         // GET: Genres/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Genres/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("GenreId,GenreNaam,Beschrijving,Kleur,IsDeleted,DeletedOn")] Genre genre)
         {
             if (ModelState.IsValid)
@@ -65,6 +66,7 @@ namespace CineFlix_Web.Controllers
         }
 
         // GET: Genres/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,10 +83,9 @@ namespace CineFlix_Web.Controllers
         }
 
         // POST: Genres/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("GenreId,GenreNaam,Beschrijving,Kleur,IsDeleted,DeletedOn")] Genre genre)
         {
             if (id != genre.GenreId)
@@ -116,6 +117,7 @@ namespace CineFlix_Web.Controllers
         }
 
         // GET: Genres/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -136,6 +138,7 @@ namespace CineFlix_Web.Controllers
         // POST: Genres/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var genre = await _context.Genres.FindAsync(id);
