@@ -1,0 +1,51 @@
+﻿@using CineFlix_Web.Controllers
+@model List<GebruikerViewModel>
+
+@{
+    ViewData["Title"] = "Gebruikersbeheer";
+}
+
+<h1>Gebruikersbeheer</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Naam</th>
+            <th>Rollen</th>
+            <th>Status</th>
+            <th>Acties</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.Naam</td>
+                <td>@string.Join(", ", user.Rollen)</td>
+                <td>
+                    @if (user.IsGeblokkeerd)
+                    {
+                        <span class="badge bg-danger">Geblokkeerd</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">Actief</span>
+                    }
+                </td>
+                <td>
+                    @* Admin knop *@
+                    <a asp-action="ToggleAdmin" asp-route-id="@user.UserId" class="btn btn-sm btn-primary">
+                        @(user.Rollen.Contains("Admin") ? "Maak User" : "Maak Admin")
+                    </a>
+
+                    @* Blokkeer knop *@
+                    <a asp-action="ToggleBlock" asp-route-id="@user.UserId" class="btn btn-sm @(user.IsGeblokkeerd ? "btn-success" : "btn-warning")">
+                        @(user.IsGeblokkeerd ? "Deblokkeer" : "Blokkeer")
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
