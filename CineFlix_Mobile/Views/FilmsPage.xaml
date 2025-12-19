@@ -6,13 +6,11 @@
              x:Class="CineFlix_Mobile.Views.FilmsPage"
              Title="CineFlix Films">
 
-    <!-- Dit fixt de binding context error -->
-    <ContentPage.BindingContext>
-        <vm:FilmsViewModel />
-    </ContentPage.BindingContext>
-
     <Grid RowDefinitions="Auto, *">
-        <SearchBar Grid.Row="0" Placeholder="Zoek op titel..." />
+        <SearchBar Grid.Row="0" 
+           Placeholder="Zoek op titel..." 
+           Text="{Binding SearchText}"
+           SearchCommand="{Binding PerformSearchCommand}" />
 
         <!-- x:DataType zorgt voor betere performance en minder errors -->
         <CollectionView Grid.Row="1" ItemsSource="{Binding Films}">

@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using CineFlix_Mobile.Services;   
+using CineFlix_Mobile.ViewModels; 
+using CineFlix_Mobile.Views;      
 
 namespace CineFlix_Mobile
 {
@@ -18,6 +21,14 @@ namespace CineFlix_Mobile
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+            // Registreer de API Service
+            builder.Services.AddSingleton<FilmsService>();
+
+            // Registreer ViewModel
+            builder.Services.AddTransient<FilmsViewModel>();
+
+            // Registreer de Pagina
+            builder.Services.AddTransient<FilmsPage>();
 
             return builder.Build();
         }
