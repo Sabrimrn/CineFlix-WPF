@@ -4,11 +4,19 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:CineFlix_Mobile.Views"
+    Shell.FlyoutBehavior="Disabled"
     Title="CineFlix_Mobile">
 
-    <ShellContent
-        Title="Films"
-        ContentTemplate="{DataTemplate views:FilmsPage}"
-        Route="FilmsPage" />
+    <!-- Tab 1: Films -->
+    <TabBar>
+        <Tab Title="Films" Icon="dotnet_bot.png">
+            <ShellContent ContentTemplate="{DataTemplate views:FilmsPage}" />
+        </Tab>
+
+        <!-- Tab 2: Privacy (NIEUW) -->
+        <Tab Title="Privacy" Icon="dotnet_bot.png">
+            <ShellContent ContentTemplate="{DataTemplate views:PrivacyPage}" />
+        </Tab>
+    </TabBar>
 
 </Shell>

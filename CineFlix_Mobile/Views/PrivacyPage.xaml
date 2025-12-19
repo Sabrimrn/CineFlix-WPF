@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CineFlix_Mobile.Views.PrivacyPage"
+             Title="Privacy &amp; Info">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+            <Label Text="Privacy Policy" 
+                   FontSize="24" 
+                   FontAttributes="Bold" />
+
+            <Label Text="CineFlix respecteert je privacy." FontSize="16" />
+
+            <Label Text="1. Gegevensverzameling" FontAttributes="Bold" FontSize="18" />
+            <Label Text="Wij slaan alleen noodzakelijke gegevens op om de app te laten werken. Er worden geen persoonsgegevens gedeeld met derden." />
+
+            <Label Text="2. AVG / GDPR" FontAttributes="Bold" FontSize="18" />
+            <Label Text="Deze applicatie voldoet aan de richtlijnen van de Algemene Verordening Gegevensbescherming." />
+
+            <Label Text="Versie: 1.0 (Student Project)" TextColor="Gray" HorizontalOptions="Center" Margin="0,50,0,0"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
