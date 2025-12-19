@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CineFlix_Mobile.ViewModels"
+             x:Class="CineFlix_Mobile.Views.FilmDetailPage"
+             Title="Details">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+            <!-- Grote Poster / Plaatje -->
+            <Image Source="dotnet_bot.png" 
+                   HeightRequest="250" 
+                   Aspect="AspectFit" />
+
+            <!-- Titel en Jaar -->
+            <Label Text="{Binding Film.Titel}" 
+                   FontSize="28" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" />
+
+            <Label Text="{Binding Film.Releasejaar}" 
+                   FontSize="18" 
+                   TextColor="Gray" 
+                   HorizontalOptions="Center" />
+
+            <!-- Rating -->
+            <Label Text="{Binding Film.Rating, StringFormat='⭐ Rating: {0:F1}'}" 
+                   TextColor="#E74C3C" 
+                   FontSize="20"
+                   HorizontalOptions="Center"/>
+
+            <!-- Beschrijving (Als je die property hebt in je Model) -->
+            <BoxView HeightRequest="1" Color="Gray" />
+
+            <Label Text="Beschrijving" FontAttributes="Bold" FontSize="18" />
+            <!-- Pas 'Omschrijving' aan als je property anders heet, bijv Description -->
+            <Label Text="{Binding Film.Omschrijving}" 
+                   FontSize="16" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

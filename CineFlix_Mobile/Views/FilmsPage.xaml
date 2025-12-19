@@ -18,6 +18,10 @@
                 <DataTemplate x:DataType="model:Film">
                     <!-- Gebruik Border in plaats van Frame voor .NET 9 -->
                     <Border Margin="10" Padding="0" StrokeShape="RoundRectangle 10" Stroke="LightGray" StrokeThickness="1">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FilmsViewModel}}, Path=GoToDetailsCommand}"
+                          CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="100, *" HeightRequest="150">
                             <Image Grid.Column="0" Source="dotnet_bot.png" Aspect="AspectFill" BackgroundColor="Gray"/>
 

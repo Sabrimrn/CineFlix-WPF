@@ -23,7 +23,7 @@ namespace CineFlix_Mobile.ViewModels
 
         // NIEUW: De tekst die je intypt in de zoekbalk
         [ObservableProperty]
-        string searchText;
+        string searchText = "";
 
         public FilmsViewModel(FilmsService filmsService)
         {
@@ -75,6 +75,17 @@ namespace CineFlix_Mobile.ViewModels
             {
                 IsLoading = false;
             }
+        }
+        [RelayCommand]
+        async Task GoToDetails(Film film)
+        {
+            if (film is null) return;
+
+            // Navigeer naar de detailpagina en stuur het film-object mee
+            await Shell.Current.GoToAsync(nameof(Views.FilmDetailPage), true, new Dictionary<string, object>
+            {
+                {"Film", film }
+            });
         }
     }
 }

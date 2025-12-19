@@ -30,6 +30,9 @@ namespace CineFlix_Mobile
             // Registreer de Pagina
             builder.Services.AddTransient<FilmsPage>();
 
+            builder.Services.AddTransient<FilmDetailPage>();
+            builder.Services.AddTransient<FilmDetailViewModel>();
+
             return builder.Build();
         }
     }
