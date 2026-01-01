@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.Razor; // Nodig voor ViewLocalization
+using System.Globalization; // Nodig voor CultureInfo
+using Microsoft.AspNetCore.Localization; // Nodig voor RequestLocalization
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +18,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<CineFlixDbContext>(options =>
     options.UseSqlite(connectionString));
 
-
-// GOED: Identity System met JOUW CineFlixUser
 builder.Services.AddIdentity<CineFlixUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
@@ -30,13 +31,17 @@ builder.Services.AddIdentity<CineFlixUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<CineFlixDbContext>()
 .AddDefaultTokenProviders();
 
-// Voeg JSON opties toe om de "infinite loop" te voorkomen
+// NIEUW: Voeg Localization toe
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options =>
     {
-        // Dit zorgt dat hij stopt als hij een cirkel ziet (Film -> Regisseur -> STOP)
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    });
+    })
+    // NIEUW: Support voor vertalingen in Views en Data Annotations (Models)
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization();
 
 builder.Services.AddRazorPages();
 builder.Services.AddSession();
@@ -76,6 +81,21 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// NIEUW: Configureer welke talen we ondersteunen
+var supportedCultures = new[]
+{
+    new CultureInfo("nl"),
+    new CultureInfo("en"),
+    new CultureInfo("fr")
+};
+
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("nl"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
+
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -84,6 +104,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapRazorPages(); // <--- DEZE OOK TOEVOEGEN!
+app.MapRazorPages();
 
 app.Run();

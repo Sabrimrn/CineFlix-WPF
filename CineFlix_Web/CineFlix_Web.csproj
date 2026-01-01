@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Data\" />
+    <Folder Include="Resources\Models\" />
+    <Folder Include="Resources\Views\" />
   </ItemGroup>
 
 </Project>
