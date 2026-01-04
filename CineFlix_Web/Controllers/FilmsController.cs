@@ -20,22 +20,36 @@ namespace CineFlix_Web.Controllers
         }
 
         // GET: Films
-        public async Task<IActionResult> Index(string searchString, string sortOrder)
+        public async Task<IActionResult> Index(string searchString, string sortOrder, int? genreId)
         {
             ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentGenre"] = genreId; // Nieuw: Onthoud welk genre is gekozen
             ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
             ViewData["RatingSortParm"] = sortOrder == "Rating" ? "rating_desc" : "Rating";
 
-            // Alles selecteren
-            var filmsQuery = _context.Films.Include(f => f.Regisseur).AsQueryable();
+            // Vul de dropdown met genres
+            ViewData["Genres"] = new SelectList(_context.Genres, "GenreId", "Naam");
 
-            // FILTEREN: Als er gezocht wordt, filter de lijst
+            // Alles selecteren
+            var filmsQuery = _context.Films
+                .Include(f => f.Regisseur)
+                .Include(f => f.FilmGenres) // Zorg dat we bij de genres kunnen
+                .ThenInclude(fg => fg.Genre)
+                .AsQueryable();
+
+            // FILTEREN OP TEKST
             if (!string.IsNullOrEmpty(searchString))
             {
                 filmsQuery = filmsQuery.Where(s => s.Titel.Contains(searchString));
             }
 
-            // SORTEREN: Kijk waar op geklikt is
+            // NIEUW: FILTEREN OP GENRE
+            if (genreId.HasValue)
+            {
+                filmsQuery = filmsQuery.Where(x => x.FilmGenres.Any(fg => fg.GenreId == genreId));
+            }
+
+            // SORTEREN
             switch (sortOrder)
             {
                 case "date_desc":
@@ -47,7 +61,7 @@ namespace CineFlix_Web.Controllers
                 case "rating_desc":
                     filmsQuery = filmsQuery.OrderByDescending(s => s.Rating);
                     break;
-                default: // Standaard sortering 
+                default: // Standaard
                     filmsQuery = filmsQuery.OrderBy(s => s.Titel);
                     break;
             }
