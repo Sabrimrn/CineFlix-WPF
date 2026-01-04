@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="utf-8" />
@@ -20,26 +23,33 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Films" asp-action="Index">Films</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Films" asp-action="Index">@Localizer["Films"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Regisseurs" asp-action="Index">Regisseurs</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Regisseurs" asp-action="Index">@Localizer["Directors"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Genres" asp-action="Index">Genres</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Genres" asp-action="Index">@Localizer["Genres"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer["Privacy"]</a>
                         </li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-controller="Gebruikers" asp-action="Index">Gebruikersbeheer</a>
+                                <a class="nav-link text-light" asp-controller="Gebruikers" asp-action="Index">@Localizer["UserManagement"]</a>
                             </li>
                         }
+                    </ul>
+
+                    <!-- Taalkeuze en Login rechts -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item" style="margin-right: 10px; margin-top: 5px;">
+                            <partial name="_CulturePartial" />
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -54,7 +64,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - CineFlix - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - CineFlix - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer["Privacy"]</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
