@@ -81,6 +81,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseMiddleware<CineFlix_Web.Middleware.RequestLoggingMiddleware>();
+
 // NIEUW: Configureer welke talen we ondersteunen
 var supportedCultures = new[]
 {
