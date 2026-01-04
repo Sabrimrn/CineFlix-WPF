@@ -120,7 +120,7 @@
   <data name="Films" xml:space="preserve">
     <value>Movies</value>
   </data>
-  <data name="Gebruikersbeheer" xml:space="preserve">
+  <data name="UserManagement" xml:space="preserve">
     <value>User Management</value>
   </data>
   <data name="Genres" xml:space="preserve">
@@ -132,7 +132,7 @@
   <data name="Privacy" xml:space="preserve">
     <value>Privacy</value>
   </data>
-  <data name="Regisseurs" xml:space="preserve">
+  <data name="Directors" xml:space="preserve">
     <value>Directors</value>
   </data>
 </root>

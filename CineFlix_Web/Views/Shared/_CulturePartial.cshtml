@@ -8,17 +8,49 @@
 
 @{
     var requestCulture = Context.Features.Get<IRequestCultureFeature>();
-    var cultureItems = LocOptions.Value.SupportedUICultures
-        .Select(c => new SelectListItem { Value = c.Name, Text = c.Name.ToUpper() })
-        .ToList();
-
-    // Pak de route waar we nu zijn, zodat we daar blijven na het wisselen
     var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}{Context.Request.QueryString}";
 }
 
-<div title="@Localizer["Request culture provider:"] @requestCulture?.Provider?.GetType().Name">
-    <form id="selectLanguage" asp-controller="Culture" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post" class="form-horizontal">
-        <select name="culture" onchange="this.form.submit();" asp-for="@requestCulture.RequestCulture.UICulture.Name" asp-items="cultureItems" class="form-select form-select-sm">
-        </select>
-    </form>
-</div>
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        @if (requestCulture.RequestCulture.UICulture.Name == "nl")
+        {
+            <span>🇳🇱 NL</span>
+        }
+        else if (requestCulture.RequestCulture.UICulture.Name == "en")
+        {
+
+            <span>🇬🇧 EN</span>
+        }
+        else if (requestCulture.RequestCulture.UICulture.Name == "fr")
+        {
+
+            <span>🇫🇷 FR</span>
+        }
+        else
+        {
+
+            <span>🌍 Taal</span>
+        }
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+        <li>
+            <form asp-controller="Culture" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post">
+                <input type="hidden" name="culture" value="nl" />
+                <button type="submit" class="dropdown-item">Nederlands 🇳🇱</button>
+            </form>
+        </li>
+        <li>
+            <form asp-controller="Culture" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post">
+                <input type="hidden" name="culture" value="en" />
+                <button type="submit" class="dropdown-item">English 🇬🇧</button>
+            </form>
+        </li>
+        <li>
+            <form asp-controller="Culture" asp-action="SetLanguage" asp-route-returnUrl="@returnUrl" method="post">
+                <input type="hidden" name="culture" value="fr" />
+                <button type="submit" class="dropdown-item">Français 🇫🇷</button>
+            </form>
+        </li>
+    </ul>
+</li>
