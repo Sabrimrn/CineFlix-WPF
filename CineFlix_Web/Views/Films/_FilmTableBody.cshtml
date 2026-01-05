@@ -1,0 +1,24 @@
+﻿@model IEnumerable<CineFlix_Models.Film>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@Html.DisplayFor(modelItem => item.Titel)</td>
+        <td>@Html.DisplayFor(modelItem => item.Releasejaar)</td>
+        <td>@Html.DisplayFor(modelItem => item.DuurMinuten)</td>
+        <td>@Html.DisplayFor(modelItem => item.Beschrijving)</td>
+        <td>@Html.DisplayFor(modelItem => item.CoverAfbeelding)</td>
+        <td>@Html.DisplayFor(modelItem => item.Rating)</td>
+        <td>@Html.DisplayFor(modelItem => item.Regisseur.Naam)</td>
+        <td>
+            <a asp-action="Details" asp-route-id="@item.FilmId" class="btn btn-info btn-sm">Details</a>
+            @if (User.IsInRole("Admin"))
+            {
+                <span> | </span>
+                <a asp-action="Edit" asp-route-id="@item.FilmId" class="btn btn-warning btn-sm">Edit</a>
+                <span> | </span>
+                <a asp-action="Delete" asp-route-id="@item.FilmId" class="btn btn-danger btn-sm">Delete</a>
+            }
+        </td>
+    </tr>
+}

@@ -20,33 +20,42 @@ namespace CineFlix_Web.Controllers
         }
 
         // GET: Films
-        public async Task<IActionResult> Index(string searchString, string sortOrder, int? genreId)
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
             ViewData["CurrentFilter"] = searchString;
-            ViewData["CurrentGenre"] = genreId; // Nieuw: Onthoud welk genre is gekozen
             ViewData["DateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
             ViewData["RatingSortParm"] = sortOrder == "Rating" ? "rating_desc" : "Rating";
 
-            // Vul de dropdown met genres
-            ViewData["Genres"] = new SelectList(_context.Genres, "GenreId", "Naam");
+            // We gebruiken nu de helper methode, zodat we geen dubbele code hebben
+            var films = await GetFilteredFilms(searchString, sortOrder);
 
-            // Alles selecteren
+            return View(films);
+        }
+
+        // NIEUW: AJAX Zoek Functie 🚀
+        // Deze wordt aangeroepen door het Javascript in je Index.cshtml als je typt
+        public async Task<IActionResult> AjaxSearch(string searchString)
+        {
+            // We geven "" mee als sortOrder om de warning over 'null' te voorkomen
+            var films = await GetFilteredFilms(searchString, "");
+
+            // We sturen alleen het tabel-gedeelte terug
+            return PartialView("_FilmTableBody", films);
+        }
+
+        // HULP METHODE: Hier zit alle logica voor zoeken en sorteren
+        private async Task<List<Film>> GetFilteredFilms(string searchString, string sortOrder)
+        {
             var filmsQuery = _context.Films
                 .Include(f => f.Regisseur)
-                .Include(f => f.FilmGenres) // Zorg dat we bij de genres kunnen
+                .Include(f => f.FilmGenres)
                 .ThenInclude(fg => fg.Genre)
                 .AsQueryable();
 
-            // FILTEREN OP TEKST
+            // FILTEREN
             if (!string.IsNullOrEmpty(searchString))
             {
                 filmsQuery = filmsQuery.Where(s => s.Titel.Contains(searchString));
-            }
-
-            // NIEUW: FILTEREN OP GENRE
-            if (genreId.HasValue)
-            {
-                filmsQuery = filmsQuery.Where(x => x.FilmGenres.Any(fg => fg.GenreId == genreId));
             }
 
             // SORTEREN
@@ -61,12 +70,12 @@ namespace CineFlix_Web.Controllers
                 case "rating_desc":
                     filmsQuery = filmsQuery.OrderByDescending(s => s.Rating);
                     break;
-                default: // Standaard
+                default:
                     filmsQuery = filmsQuery.OrderBy(s => s.Titel);
                     break;
             }
 
-            return View(await filmsQuery.ToListAsync());
+            return await filmsQuery.ToListAsync();
         }
 
         // GET: Films/Details/5
@@ -79,6 +88,8 @@ namespace CineFlix_Web.Controllers
 
             var film = await _context.Films
                 .Include(f => f.Regisseur)
+                .Include(f => f.FilmGenres)
+                .ThenInclude(fg => fg.Genre)
                 .FirstOrDefaultAsync(m => m.FilmId == id);
             if (film == null)
             {
